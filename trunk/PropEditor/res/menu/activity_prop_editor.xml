@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/item_reload" android:title="@string/menu_item_reload" android:icon="@drawable/ic_menu_reload"/>
+    <item android:id="@+id/item_restore" android:title="@string/menu_item_restore" android:icon="@drawable/ic_menu_restore"/>
+    <item android:id="@+id/item_add" android:title="@string/menu_item_add" android:icon="@drawable/ic_menu_add"/>
+    <item android:id="@+id/item_exit" android:title="@string/menu_item_exit" android:icon="@drawable/ic_menu_close_clear_cancel"/>
+    <item android:id="@+id/item_save" android:title="@string/menu_item_save" android:icon="@drawable/ic_menu_save"/>
+    <item android:id="@+id/item_save_to" android:title="@string/menu_item_save_to" android:icon="@drawable/ic_menu_save"/>
+    <item android:id="@+id/item_about" android:title="@string/menu_item_about" android:icon="@drawable/ic_menu_info_details"/>
+</menu>
