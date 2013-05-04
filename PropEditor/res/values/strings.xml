@@ -42,11 +42,22 @@
     <!-- About -->
     <string name="about">About</string>
     <string name="about_text"><Data><![CDATA[
-        Application version: %s<br/>
-        I created this application to change the host name for my phone.<br/>
-        Using this application you can view and modify all properties from your build.prop file.<br/>
-        This file is important for your Android system and is stored on the /system partition.<br/>
-        Normaly the full path is: /syste/build.prop]]></Data></string>
+        Application version: %s<br />
+        I created this application to change the host name for my phone.<br />
+        Using this application you can view and modify all properties from your build.prop file.<br />
+        This file is important for your Android system and is stored on the /system partition.<br />
+        Normaly the full path is: /syste/build.prop<br />
+        <br />
+        <hr />
+        Change log:<br />
+        Version 1.2<br />
+		- Added support to save the build.prop file to a chosen folder, default is the SD card.<br />
+		<br />
+		Version 1.1<br />
+		- Added support to restore the original build.prop file.<br />
+		<br />
+		Version 1.0<br />
+		- First version.]]></Data></string>
     
     <!-- License -->
     <string name="license">License</string>
