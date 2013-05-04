@@ -56,11 +56,9 @@ public class FolderBrowserDialog extends BaseDialog implements
 	private Comparator<String> comparator;
 	private FileFilter fileFilter;
 	private List<String> folders;
-	private String selectedFolder;
 	private TextView currentFolder;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
-	private long lastClickTimestamp;
 
 	public FolderBrowserDialog(final Context context, FolderChosen folderChosen, int titleId,
 			String folderPath) {
@@ -69,10 +67,8 @@ public class FolderBrowserDialog extends BaseDialog implements
 		initDialog(R.layout.browse_folder_layout, titleId);
 		this.folderPath = new File(folderPath);
 		folders = new ArrayList<String>();
-		selectedFolder = "";
 		comparator = new AlphabeticallySort();
 		fileFilter = new FolderFileFilter(false);
-		lastClickTimestamp = System.currentTimeMillis();
 		adapter = new ArrayAdapter<String>(parentActivity,
 				R.layout.browser_item_layout, R.id.folderPathName, new ArrayList<String>());
 		initInterface();
@@ -107,7 +103,7 @@ public class FolderBrowserDialog extends BaseDialog implements
 	@Override
 	public void onClick(View view) {
 		if (view == btnOk) {
-			folderChosen.setFolder(folderPath.getAbsolutePath() + selectedFolder);
+			folderChosen.setFolder(folderPath.getAbsolutePath());
 		}
 		super.onClick(view);
 	}
@@ -119,27 +115,13 @@ public class FolderBrowserDialog extends BaseDialog implements
 	 *            Position on the list of selected folder.
 	 */
 	private void setSelectedFolder(int position) {
-		long now = System.currentTimeMillis();
-		boolean isDoubleClick = false;
 		if (folders.size() > position) {
-			if (now - lastClickTimestamp < 1000) {
-				isDoubleClick = true;
-			}
-			lastClickTimestamp = now;
-			if (position == 0) {
-				selectedFolder = "";
-			} else {
-				selectedFolder = "/" + folders.get(position) + "/";
-			}
-			updateCurrentFolder();
-			if (isDoubleClick) {
-				if (position == 0 && folderPath.getParentFile() != null && folderPath.getParentFile().exists()) {
-					folderPath = folderPath.getParentFile();
-					startBrowseFolder();
-				} else if (position > 0) {
-					folderPath = new File(folderPath + selectedFolder);
-					startBrowseFolder();
-				}
+			if (position == 0 && folderPath.getParentFile() != null && folderPath.getParentFile().exists()) {
+				folderPath = folderPath.getParentFile();
+				startBrowseFolder();
+			} else if (position > 0) {
+				folderPath = new File(folderPath + "/" + folders.get(position) + "/");
+				startBrowseFolder();
 			}
 		}
 	}
@@ -148,7 +130,7 @@ public class FolderBrowserDialog extends BaseDialog implements
 	 * Update current folder path.
 	 */
 	private void updateCurrentFolder() {
-		currentFolder.setText(folderPath.getAbsolutePath() + selectedFolder);
+		currentFolder.setText(folderPath.getAbsolutePath());
 	}
 
 	/**
@@ -172,7 +154,6 @@ public class FolderBrowserDialog extends BaseDialog implements
 
 	@Override
 	public void endBrowseFolders(DefaultAsyncTaskResult result) {
-		selectedFolder = "";
 		updateCurrentFolder();
 		adapter.clear();
 		for (String folder : folders) {

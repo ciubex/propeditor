@@ -50,6 +50,8 @@
         <br />
         <hr />
         Change log:<br />
+        Version 1.2.1<br />
+        - Minor fix on the folder browser.
         Version 1.2<br />
 		- Added support to save the build.prop file to a chosen folder, default is the SD card.<br />
 		<br />
