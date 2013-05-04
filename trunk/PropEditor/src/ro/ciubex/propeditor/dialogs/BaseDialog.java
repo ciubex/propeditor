@@ -102,11 +102,13 @@ public abstract class BaseDialog extends Dialog implements View.OnClickListener 
 	 * This method is a workaround to hide the keyboard.
 	 */
 	protected void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) parentActivity
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
-		for (EditText editText : listEditText) {
-			imm.hideSoftInputFromWindow(editText.getWindowToken(),
-					InputMethodManager.HIDE_NOT_ALWAYS);
+		if (!listEditText.isEmpty()) {
+			InputMethodManager imm = (InputMethodManager) parentActivity
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			for (EditText editText : listEditText) {
+				imm.hideSoftInputFromWindow(editText.getWindowToken(),
+						InputMethodManager.HIDE_NOT_ALWAYS);
+			}
 		}
 	}
 

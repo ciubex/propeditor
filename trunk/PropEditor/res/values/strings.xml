@@ -77,6 +77,8 @@
     <string name="points">&#8230;</string>
     <string name="folders">Folders:</string>
     <string name="sdcard">/sdcard</string>
+    <string name="no_folders">No folders</string>
     <string name="no_folder_path">You do not provided any folder name!</string>
+    <string name="current_folder">..</string>
 
 </resources>

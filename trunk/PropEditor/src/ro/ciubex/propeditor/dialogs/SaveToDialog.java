@@ -39,7 +39,8 @@ import android.widget.EditText;
  * @author Claudiu Ciobotariu
  * 
  */
-public class SaveToDialog extends BaseDialog implements SavePropertiesTask.Responder {
+public class SaveToDialog extends BaseDialog implements
+		SavePropertiesTask.Responder, FolderBrowserDialog.FolderChosen {
 	private PropEditorApplication app;
 	private EditText folderPath;
 	private Button btnBrowse;
@@ -134,19 +135,37 @@ public class SaveToDialog extends BaseDialog implements SavePropertiesTask.Respo
 	 * Browse for a folder to save.
 	 */
 	private void showBrowseForlders() {
+		new FolderBrowserDialog(parentActivity, this, R.string.folders,
+				getFolderPath()).show();
+	}
 
+	/**
+	 * Get the folder name written on the edit field.
+	 * 
+	 * @return The folder path from the edit text field.
+	 */
+	private String getFolderPath() {
+		String content = folderPath.getText().toString();
+		if (content != null) {
+			if (content.length() > 0) {
+				if (!content.endsWith("/")) {
+					content += "/";
+				}
+			} else {
+				content = null;
+			}
+		}
+		return content;
 	}
 
 	/**
 	 * Save current properties to the chosen folder.
 	 */
 	private void saveTo() {
-		String content = folderPath.getText().toString();
-		if (content != null && content.length() > 0) {
-			if (!content.endsWith("/")) {
-				content += "/";
-			}
-			new SavePropertiesTask(this, content + fileName, properties).execute();
+		String content = getFolderPath();
+		if (content != null) {
+			new SavePropertiesTask(this, content + fileName, properties)
+					.execute();
 		} else {
 			app.showMessageError(parentActivity, R.string.no_folder_path);
 		}
@@ -170,6 +189,11 @@ public class SaveToDialog extends BaseDialog implements SavePropertiesTask.Respo
 		} else {
 			app.showMessageError(parentActivity, result.resultMessage);
 		}
+	}
+
+	@Override
+	public void setFolder(String folder) {
+		folderPath.setText(folder);
 	}
 
 }
