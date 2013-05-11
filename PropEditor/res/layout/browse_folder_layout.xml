@@ -15,7 +15,7 @@
         android:id="@+id/folder_list"
         android:layout_width="wrap_content"
         android:layout_height="0dip"
-        android:layout_weight="0.73" />
+        android:layout_weight="1.15" />
     
     <TextView
         android:id="@+id/empty_folder_list"

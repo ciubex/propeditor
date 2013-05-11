@@ -42,27 +42,31 @@
     <!-- About -->
     <string name="about">About</string>
     <string name="about_text"><Data><![CDATA[
-        Application version: %s<br />
-        I created this application to change the host name for my phone.<br />
-        Using this application you can view and modify all properties from your build.prop file.<br />
-        This file is important for your Android system and is stored on the /system partition.<br />
-        Normaly the full path is: /syste/build.prop<br />
-        <br />
+        <b>Application version: %s</b><br/>
+        I created this application to change the host name for my phone.<br/>
+        Using this application you can view and modify all properties from your <b>build.prop</b> file.<br/>
+        This file is important for your Android system and is stored on the <b>/system</b> partition.<br/>
+        Normaly the full path is: <b>/system/build.prop</b><br/>
+        <br/>
         <hr />
-        Change log:<br />
-        Version 1.2.2<br />
-        - Fixed about text.<br />
-        <br />
-        Version 1.2.1<br />
-        - Minor fix on the folder browser.<br />
-        <br />
-        Version 1.2<br />
-		- Added support to save the build.prop file to a chosen folder, default is the SD card.<br />
-		<br />
-		Version 1.1<br />
-		- Added support to restore the original build.prop file.<br />
-		<br />
-		Version 1.0<br />
+        <u><b>Change log:</b></u><br/>
+        <b>Version 1.2.3</b><br/>
+        - Added folder icons for the folder browser.<br/>
+        - Other small fixes.<br/>
+        <br/>
+        <b>Version 1.2.2</b><br/>
+        - Fixed about text.<br/>
+        <br/>
+        <b>Version 1.2.1</b><br/>
+        - Minor fix on the folder browser.<br/>
+        <br/>
+        <b>Version 1.2</b><br/>
+		- Added support to save the build.prop file to a chosen folder, default is the SD card.<br/>
+		<br/>
+		<b>Version 1.1</b><br/>
+		- Added support to restore the original build.prop file.<br/>
+		<br/>
+		<b>Version 1.0</b><br/>
 		- First version.]]></Data></string>
     
     <!-- License -->
@@ -97,5 +101,6 @@
     <string name="no_folders">No folders</string>
     <string name="no_folder_path">You do not provided any folder name!</string>
     <string name="current_folder">..</string>
+    <string name="folder_icon">x</string>
 
 </resources>
