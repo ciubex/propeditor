@@ -192,7 +192,12 @@ public class PropEditorApplication extends Application {
 	public Locale getDefaultLocale() {
 		return defaultLocale;
 	}
-	
+
+	/**
+	 * Retrieve available properties.
+	 * 
+	 * @return Loaded properties.
+	 */
 	public Entities getEntities() {
 		return properties;
 	}
