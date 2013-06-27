@@ -55,7 +55,7 @@ public class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		app = (PropEditorApplication) getApplication();
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		lockScreenRotation();
+		//lockScreenRotation();
 	}
 
 	/**

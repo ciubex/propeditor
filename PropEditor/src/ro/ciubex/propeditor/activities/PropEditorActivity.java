@@ -5,7 +5,6 @@ import ro.ciubex.propeditor.dialogs.EditorDialog;
 import ro.ciubex.propeditor.dialogs.SaveToDialog;
 import ro.ciubex.propeditor.list.PropertiesListAdapter;
 import ro.ciubex.propeditor.models.Constants;
-import ro.ciubex.propeditor.properties.Entities;
 import ro.ciubex.propeditor.properties.Entity;
 import ro.ciubex.propeditor.tasks.DefaultAsyncTaskResult;
 import ro.ciubex.propeditor.tasks.LoadPropertiesTask;
@@ -28,7 +27,6 @@ public class PropEditorActivity extends BaseActivity implements
 		RestorePropertiesTask.Responder {
 
 	private final String BUILD_PROP = "/system/build.prop";
-	private Entities properties;
 	private PropertiesListAdapter adapter;
 	private EditText filterBox;
 	private ListView propertiesList = null;
@@ -90,7 +88,6 @@ public class PropEditorActivity extends BaseActivity implements
 	 * Prepare main list view with all controls
 	 */
 	private void prepareMainListView() {
-		properties = new Entities();
 		propertiesList = (ListView) findViewById(R.id.properties_list);
 		propertiesList.setEmptyView(findViewById(R.id.empty_list_view));
 		propertiesList
@@ -106,11 +103,15 @@ public class PropEditorActivity extends BaseActivity implements
 						return isProcessed;
 					}
 				});
-		loadPropertiesList();
+		if (app.getEntities().isEmpty()) {
+			loadPropertiesList();
+		} else {
+			reloadAdapter();
+		}
 	}
 
 	private void loadPropertiesList() {
-		new LoadPropertiesTask(this, BUILD_PROP, properties).execute();
+		new LoadPropertiesTask(this, BUILD_PROP, app.getEntities()).execute();
 	}
 
 	/**
@@ -182,9 +183,9 @@ public class PropEditorActivity extends BaseActivity implements
 	 * Reload adapter and properties list based on the provided properties.
 	 */
 	public void reloadAdapter() {
-		adapter = new PropertiesListAdapter(app, app, properties);
+		adapter = new PropertiesListAdapter(app, app, app.getEntities());
 		propertiesList.setAdapter(adapter);
-		propertiesList.setFastScrollEnabled(properties.size() > 50);
+		propertiesList.setFastScrollEnabled(app.getEntities().size() > 50);
 	}
 
 	/**
@@ -221,7 +222,7 @@ public class PropEditorActivity extends BaseActivity implements
 	 * new property.
 	 */
 	private void onMenuItemAdd() {
-		new EditorDialog(this, properties, null, R.string.add_property).show();
+		new EditorDialog(this, app.getEntities(), null, R.string.add_property).show();
 	}
 
 	/**
@@ -232,7 +233,7 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	private void onMenuItemEdit(int position) {
 		Entity entity = adapter.getItem(position);
-		new EditorDialog(this, properties, entity, R.string.edit_property)
+		new EditorDialog(this, app.getEntities(), entity, R.string.edit_property)
 				.show();
 	}
 
@@ -265,7 +266,7 @@ public class PropEditorActivity extends BaseActivity implements
 	protected void onConfirmation(int confirmationId, Object anObject) {
 		if (CONFIRM_ID_DELETE == confirmationId && anObject != null) {
 			Entity entity = (Entity) anObject;
-			properties.remove(entity);
+			app.getEntities().remove(entity);
 			reloadAdapter();
 		} else if (CONFIRM_ID_RESTORE == confirmationId) {
 			new RestorePropertiesTask(this, BUILD_PROP).execute();
@@ -289,7 +290,7 @@ public class PropEditorActivity extends BaseActivity implements
 	 * Invoked when is chose the Save menu item.
 	 */
 	private void onMenuItemSave() {
-		new SavePropertiesTask(this, BUILD_PROP, properties).execute();
+		new SavePropertiesTask(this, BUILD_PROP, app.getEntities()).execute();
 	}
 
 	/**
@@ -317,7 +318,7 @@ public class PropEditorActivity extends BaseActivity implements
 	 * Show the Save To dialog.
 	 */
 	private void onMenuItemSaveTo() {
-		new SaveToDialog(this, R.string.save_to, "build.prop", properties).show();
+		new SaveToDialog(this, R.string.save_to, "build.prop", app.getEntities()).show();
 	}
 
 	/**
