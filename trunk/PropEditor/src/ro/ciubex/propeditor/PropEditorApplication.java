@@ -20,6 +20,8 @@ package ro.ciubex.propeditor;
 
 import java.util.Locale;
 
+import ro.ciubex.propeditor.properties.Entities;
+
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,17 +36,19 @@ import android.widget.Toast;
  */
 public class PropEditorApplication extends Application {
 	private ProgressDialog progressDialog;
+	private Entities properties;
 	private String waitString;
 	private Locale defaultLocale;
 
 	/**
-	 * This method is invoked when thr application is created.
+	 * This method is invoked when the application is created.
 	 * 
 	 * @see android.app.Application#onCreate()
 	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		properties = new Entities();
 		waitString = getString(R.string.please_wait);
 		defaultLocale = Locale.getDefault();
 	}
@@ -187,5 +191,9 @@ public class PropEditorApplication extends Application {
 	 */
 	public Locale getDefaultLocale() {
 		return defaultLocale;
+	}
+	
+	public Entities getEntities() {
+		return properties;
 	}
 }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -16,6 +16,8 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowTitleSize">35dip</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
+        <!-- <item name="android:fastScrollTrackDrawable">@drawable/fastscroll_thumb_holo</item> -->
+        <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
     </style>
     
     <style name="CustomWindowTitleBackground">

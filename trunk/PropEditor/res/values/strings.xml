@@ -50,6 +50,10 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        <b>Version 1.2.4</b><br/>
+        - Changed fast scroll style (beta).<br/>
+        - Fixed rotate behaviour.<br/>
+        <br/>
         <b>Version 1.2.3</b><br/>
         - Added folder icons for the folder browser.<br/>
         - Other small fixes.<br/>
