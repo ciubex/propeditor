@@ -23,8 +23,6 @@ import ro.ciubex.propeditor.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,7 +53,6 @@ public class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		app = (PropEditorApplication) getApplication();
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		//lockScreenRotation();
 	}
 
 	/**
@@ -163,20 +160,6 @@ public class BaseActivity extends Activity {
 				R.layout.title_layout);
 		title = (TextView) findViewById(R.id.title);
 		icon = (ImageView) findViewById(R.id.icon);
-	}
-
-	/**
-	 * This will lock this activity to not react on rotations
-	 */
-	private void lockScreenRotation() {
-		switch (this.getResources().getConfiguration().orientation) {
-		case Configuration.ORIENTATION_PORTRAIT:
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			break;
-		case Configuration.ORIENTATION_LANDSCAPE:
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			break;
-		}
 	}
 
 	/**
