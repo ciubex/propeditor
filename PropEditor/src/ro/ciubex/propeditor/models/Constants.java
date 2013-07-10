@@ -28,4 +28,7 @@ public interface Constants {
 	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 	public static final int OK = 0;
 	public static final int ERROR = 1;
+	public static final String SYSTEM_PARTITION = "/system";
+	public static final String READ_WRITE = "rw";
+	public static final String READ_ONLY = "ro";
 }

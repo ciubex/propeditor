@@ -21,7 +21,6 @@ package ro.ciubex.propeditor;
 import java.util.Locale;
 
 import ro.ciubex.propeditor.properties.Entities;
-
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -201,4 +200,5 @@ public class PropEditorApplication extends Application {
 	public Entities getEntities() {
 		return properties;
 	}
+	
 }

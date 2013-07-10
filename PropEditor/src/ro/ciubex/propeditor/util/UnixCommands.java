@@ -125,6 +125,21 @@ public class UnixCommands {
 	}
 
 	/**
+	 * Check partition mount flags if contain specified mount type
+	 * 
+	 * @param partition
+	 *            The partition to check.
+	 * @param mountType
+	 *            The mount type for the partition to be checked.
+	 * @return True, if the mounting flags contain specified mount type.
+	 */
+	public boolean checkPartitionMountFlags(String partition, String mountType) {
+		Partition p = getPartition(partition);
+		boolean result = p != null ? p.getFlags().contains(mountType) : false;
+		return result;
+	}
+
+	/**
 	 * Mount a partition.
 	 * 
 	 * @param partition
