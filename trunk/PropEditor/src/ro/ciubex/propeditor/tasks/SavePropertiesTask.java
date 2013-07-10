@@ -57,7 +57,6 @@ public class SavePropertiesTask extends
 	private String fileName;
 	private File destinationFile;
 	private Entities properties;
-	private static final String SYSTEM_PARTITION = "/system";
 
 	public SavePropertiesTask(Responder responder, String fileName,
 			Entities properties) {
@@ -75,8 +74,9 @@ public class SavePropertiesTask extends
 	protected DefaultAsyncTaskResult doInBackground(Void... params) {
 		defaultResult = new DefaultAsyncTaskResult();
 		defaultResult.resultId = Constants.OK;
-		boolean isSystem = fileName.startsWith(SYSTEM_PARTITION);
+		boolean isSystem = fileName.startsWith(Constants.SYSTEM_PARTITION);
 		boolean continueSave = true;
+		boolean shouldMountSystem = false;
 		if (destinationFile.getParentFile() == null) {
 			continueSave = false;
 			defaultResult.resultId = Constants.ERROR;
@@ -84,12 +84,16 @@ public class SavePropertiesTask extends
 					R.string.destination_folder_null);
 		}
 		if (continueSave && isSystem) {
-			if (!UnixCommands.getInstance().mountPartition(SYSTEM_PARTITION,
-					"rw")) {
+			shouldMountSystem = UnixCommands.getInstance()
+					.checkPartitionMountFlags(Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
+			if (shouldMountSystem) {
+				continueSave = UnixCommands.getInstance().mountPartition(Constants.SYSTEM_PARTITION,
+						Constants.READ_WRITE);
+			}
+			if (!continueSave) {
 				defaultResult.resultId = Constants.ERROR;
 				defaultResult.resultMessage = responder.getApplication()
 						.getString(R.string.system_no_mount);
-				continueSave = false;
 			}
 		}
 		if (continueSave) {
@@ -97,9 +101,9 @@ public class SavePropertiesTask extends
 			if (backupOldFile()) {
 				moveNewFile();
 			}
-			if (isSystem) {
-				UnixCommands.getInstance().mountPartition(SYSTEM_PARTITION,
-						"ro");
+			if (isSystem && shouldMountSystem) {
+				UnixCommands.getInstance().mountPartition(Constants.SYSTEM_PARTITION,
+						Constants.READ_ONLY);
 			}
 		}
 		return defaultResult;

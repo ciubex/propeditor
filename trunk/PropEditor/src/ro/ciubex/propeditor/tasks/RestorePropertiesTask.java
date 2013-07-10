@@ -96,9 +96,18 @@ public class RestorePropertiesTask extends
 	 * Initiating the restore method.
 	 */
 	private void restoreTheProperties() {
-		if (UnixCommands.getInstance().mountPartition("/system", "rw")) {
+		boolean shouldMountSystem = UnixCommands.getInstance()
+				.checkPartitionMountFlags(Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
+		boolean continueRestore = true;
+		if (shouldMountSystem) {
+			continueRestore = UnixCommands.getInstance().mountPartition(
+					Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
+		}
+		if (continueRestore) {
 			restoreBackupFile();
-			UnixCommands.getInstance().mountPartition("/system", "ro");
+			if (shouldMountSystem) {
+				UnixCommands.getInstance().mountPartition(Constants.SYSTEM_PARTITION, Constants.READ_ONLY);
+			}
 		} else {
 			defaultResult.resultId = Constants.ERROR;
 			defaultResult.resultMessage = responder.getApplication().getString(
