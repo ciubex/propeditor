@@ -13,6 +13,7 @@ import ro.ciubex.propeditor.tasks.SavePropertiesTask;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +34,7 @@ public class PropEditorActivity extends BaseActivity implements
 
 	private final int CONFIRM_ID_DELETE = 0;
 	private final int CONFIRM_ID_RESTORE = 1;
+	private final int CONFIRM_ID_DONATE = 2;
 
 	/**
 	 * The method invoked when the activity is creating
@@ -140,6 +142,10 @@ public class PropEditorActivity extends BaseActivity implements
 			processed = true;
 			onMenuItemRestore();
 			break;
+		case R.id.item_donate:
+			processed = true;
+			onMenuItemDonate();
+			break;
 		case R.id.item_save:
 			processed = true;
 			onMenuItemSave();
@@ -222,7 +228,8 @@ public class PropEditorActivity extends BaseActivity implements
 	 * new property.
 	 */
 	private void onMenuItemAdd() {
-		new EditorDialog(this, app.getEntities(), null, R.string.add_property).show();
+		new EditorDialog(this, app.getEntities(), null, R.string.add_property)
+				.show();
 	}
 
 	/**
@@ -233,8 +240,8 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	private void onMenuItemEdit(int position) {
 		Entity entity = adapter.getItem(position);
-		new EditorDialog(this, app.getEntities(), entity, R.string.edit_property)
-				.show();
+		new EditorDialog(this, app.getEntities(), entity,
+				R.string.edit_property).show();
 	}
 
 	/**
@@ -270,7 +277,22 @@ public class PropEditorActivity extends BaseActivity implements
 			reloadAdapter();
 		} else if (CONFIRM_ID_RESTORE == confirmationId) {
 			new RestorePropertiesTask(this, BUILD_PROP).execute();
+		} else if (CONFIRM_ID_DONATE == confirmationId) {
+			startBrowserWithPage(R.string.donate_url);
 		}
+	}
+
+	/**
+	 * Launch the default browser with a specified URL page.
+	 * 
+	 * @param urlResourceId
+	 *            The URL resource id.
+	 */
+	private void startBrowserWithPage(int urlResourceId) {
+		String url = app.getString(urlResourceId);
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		startActivity(i);
 	}
 
 	/**
@@ -284,6 +306,14 @@ public class PropEditorActivity extends BaseActivity implements
 		showConfirmationDialog(R.string.restore,
 				app.getString(R.string.restore_confirmation),
 				CONFIRM_ID_RESTORE, null);
+	}
+
+	/**
+	 * Invoked when the user chose the Donate menu item.
+	 */
+	private void onMenuItemDonate() {
+		showConfirmationDialog(R.string.donate_title,
+				app.getString(R.string.donate_message), CONFIRM_ID_DONATE, null);
 	}
 
 	/**
@@ -318,7 +348,8 @@ public class PropEditorActivity extends BaseActivity implements
 	 * Show the Save To dialog.
 	 */
 	private void onMenuItemSaveTo() {
-		new SaveToDialog(this, R.string.save_to, "build.prop", app.getEntities()).show();
+		new SaveToDialog(this, R.string.save_to, "build.prop",
+				app.getEntities()).show();
 	}
 
 	/**
