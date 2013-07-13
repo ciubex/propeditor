@@ -23,10 +23,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import ro.ciubex.propeditor.PropEditorApplication;
 import ro.ciubex.propeditor.R;
 import ro.ciubex.propeditor.models.Constants;
 import ro.ciubex.propeditor.properties.Entities;
-import ro.ciubex.propeditor.util.UnixCommands;
 import ro.ciubex.propeditor.util.Utilities;
 import android.app.Application;
 import android.os.AsyncTask;
@@ -52,6 +52,7 @@ public class SavePropertiesTask extends
 	}
 
 	private Responder responder;
+	private PropEditorApplication application;
 	private DefaultAsyncTaskResult defaultResult;
 	private String privateDir;
 	private String fileName;
@@ -65,6 +66,7 @@ public class SavePropertiesTask extends
 		destinationFile = new File(fileName);
 		this.properties = properties;
 		privateDir = responder.getApplication().getFilesDir().getAbsolutePath();
+		application = (PropEditorApplication) responder.getApplication();
 	}
 
 	/**
@@ -80,19 +82,20 @@ public class SavePropertiesTask extends
 		if (destinationFile.getParentFile() == null) {
 			continueSave = false;
 			defaultResult.resultId = Constants.ERROR;
-			defaultResult.resultMessage = responder.getApplication().getString(
-					R.string.destination_folder_null);
+			defaultResult.resultMessage = application
+					.getString(R.string.destination_folder_null);
 		}
 		if (continueSave && isSystem) {
-			shouldMountSystem = UnixCommands.getInstance()
-					.checkPartitionMountFlags(Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
+			shouldMountSystem = application.getUnixShell()
+					.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
+							Constants.READ_WRITE) != true;
 			if (shouldMountSystem) {
-				continueSave = UnixCommands.getInstance().mountPartition(Constants.SYSTEM_PARTITION,
-						Constants.READ_WRITE);
+				continueSave = application.getUnixShell().mountPartition(
+						Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
 			}
 			if (!continueSave) {
 				defaultResult.resultId = Constants.ERROR;
-				defaultResult.resultMessage = responder.getApplication()
+				defaultResult.resultMessage = application
 						.getString(R.string.system_no_mount);
 			}
 		}
@@ -100,10 +103,14 @@ public class SavePropertiesTask extends
 			saveTheProperties();
 			if (backupOldFile()) {
 				moveNewFile();
+			} else {
+				defaultResult.resultId = Constants.ERROR;
+				defaultResult.resultMessage = application.getString(
+						R.string.backup_failed);
 			}
 			if (isSystem && shouldMountSystem) {
-				UnixCommands.getInstance().mountPartition(Constants.SYSTEM_PARTITION,
-						Constants.READ_ONLY);
+				application.getUnixShell().mountPartition(
+						Constants.SYSTEM_PARTITION, Constants.READ_ONLY);
 			}
 		}
 		return defaultResult;
@@ -138,11 +145,11 @@ public class SavePropertiesTask extends
 		try {
 			writer = new BufferedWriter(new FileWriter(file));
 			properties.store(writer);
-			defaultResult.resultMessage = responder.getApplication().getString(
+			defaultResult.resultMessage = application.getString(
 					R.string.file_saved, fileName);
 		} catch (IOException e) {
 			defaultResult.resultId = Constants.ERROR;
-			defaultResult.resultMessage = responder.getApplication().getString(
+			defaultResult.resultMessage = application.getString(
 					R.string.saving_exception, fileName, "IOException",
 					e.getMessage());
 			e.printStackTrace();
@@ -164,8 +171,8 @@ public class SavePropertiesTask extends
 		boolean result = true;
 		String bkFileName = backupOriginalFile();
 		if (bkFileName != null) {
-			result = UnixCommands.getInstance().runUnixCommand(
-					"mv -f " + fileName + " " + bkFileName);
+			result = application.getUnixShell().runUnixCommand(
+					"mv " + fileName + " " + bkFileName);
 		}
 		return result;
 	}
@@ -177,13 +184,17 @@ public class SavePropertiesTask extends
 		String prvFile = privateDir + File.separator
 				+ destinationFile.getName();
 		if (existDestinationFolder()) {
-			UnixCommands.getInstance().runUnixCommand(
-					"mv -f " + prvFile + " " + fileName);
+			if (!application.getUnixShell().runUnixCommand(
+					"cat " + prvFile + " > " + fileName)) {
+				defaultResult.resultId = Constants.ERROR;
+				defaultResult.resultMessage = application.getString(
+						R.string.new_file_failed);
+			}
 		} else {
 			defaultResult.resultId = Constants.ERROR;
-			defaultResult.resultMessage = responder.getApplication().getString(
-					R.string.destination_folder_not_exist,
-					destinationFile.getParentFile().getAbsolutePath());
+			defaultResult.resultMessage = application.getString(
+					R.string.destination_folder_not_exist, destinationFile
+							.getParentFile().getAbsolutePath());
 		}
 	}
 
@@ -193,7 +204,7 @@ public class SavePropertiesTask extends
 	private boolean existDestinationFolder() {
 		boolean exist = destinationFile.getParentFile().exists();
 		if (!exist) {
-			exist = UnixCommands.getInstance()
+			exist = application.getUnixShell()
 					.runUnixCommand(
 							"mkdir -p "
 									+ destinationFile.getParentFile()

@@ -21,6 +21,7 @@ package ro.ciubex.propeditor;
 import java.util.Locale;
 
 import ro.ciubex.propeditor.properties.Entities;
+import ro.ciubex.propeditor.util.UnixCommands;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -38,6 +39,7 @@ public class PropEditorApplication extends Application {
 	private Entities properties;
 	private String waitString;
 	private Locale defaultLocale;
+	private UnixCommands unixShell;
 
 	/**
 	 * This method is invoked when the application is created.
@@ -51,12 +53,26 @@ public class PropEditorApplication extends Application {
 		waitString = getString(R.string.please_wait);
 		defaultLocale = Locale.getDefault();
 	}
+	
+	/**
+	 * Obtain the current unix shell.
+	 * @return Unix shell.
+	 */
+	public UnixCommands getUnixShell() {
+		if (unixShell == null) {
+			unixShell = new UnixCommands();
+		}
+		return unixShell;
+	}
 
 	/**
 	 * Method used when the application should be closed.
 	 */
 	public void onClose() {
 		hideProgressDialog();
+		if (unixShell != null) {
+			unixShell.closeShell();
+		}
 	}
 
 	/**

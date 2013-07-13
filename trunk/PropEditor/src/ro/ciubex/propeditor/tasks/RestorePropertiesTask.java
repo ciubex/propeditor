@@ -18,9 +18,9 @@
  */
 package ro.ciubex.propeditor.tasks;
 
+import ro.ciubex.propeditor.PropEditorApplication;
 import ro.ciubex.propeditor.R;
 import ro.ciubex.propeditor.models.Constants;
-import ro.ciubex.propeditor.util.UnixCommands;
 import ro.ciubex.propeditor.util.Utilities;
 import android.app.Application;
 import android.os.AsyncTask;
@@ -46,6 +46,7 @@ public class RestorePropertiesTask extends
 	}
 
 	private Responder responder;
+	private PropEditorApplication application;
 	private DefaultAsyncTaskResult defaultResult;
 	private String fileName;
 
@@ -60,6 +61,7 @@ public class RestorePropertiesTask extends
 	public RestorePropertiesTask(Responder responder, String fileName) {
 		this.responder = responder;
 		this.fileName = fileName;
+		application = (PropEditorApplication) responder.getApplication();
 	}
 
 	/**
@@ -96,17 +98,19 @@ public class RestorePropertiesTask extends
 	 * Initiating the restore method.
 	 */
 	private void restoreTheProperties() {
-		boolean shouldMountSystem = UnixCommands.getInstance()
-				.checkPartitionMountFlags(Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
+		boolean shouldMountSystem = application.getUnixShell()
+				.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
+						Constants.READ_WRITE);
 		boolean continueRestore = true;
 		if (shouldMountSystem) {
-			continueRestore = UnixCommands.getInstance().mountPartition(
+			continueRestore = application.getUnixShell().mountPartition(
 					Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
 		}
 		if (continueRestore) {
 			restoreBackupFile();
 			if (shouldMountSystem) {
-				UnixCommands.getInstance().mountPartition(Constants.SYSTEM_PARTITION, Constants.READ_ONLY);
+				application.getUnixShell().mountPartition(
+						Constants.SYSTEM_PARTITION, Constants.READ_ONLY);
 			}
 		} else {
 			defaultResult.resultId = Constants.ERROR;
@@ -121,8 +125,8 @@ public class RestorePropertiesTask extends
 	private void restoreBackupFile() {
 		String backupFileName = fileName + ".bak";
 		if (Utilities.existFile(backupFileName)) {
-			UnixCommands.getInstance().runUnixCommand(
-					"mv -f " + backupFileName + " " + fileName);
+			application.getUnixShell().runUnixCommand(
+					"mv " + backupFileName + " " + fileName);
 			defaultResult.resultMessage = responder.getApplication().getString(
 					R.string.file_restored, fileName);
 		} else {
