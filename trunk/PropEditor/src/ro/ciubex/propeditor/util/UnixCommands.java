@@ -153,4 +153,13 @@ public class UnixCommands {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Check if the shell have root access;
+	 * 
+	 * @return True if is enabled root access;
+	 */
+	public boolean hasRootAccess() {
+		return rootShell.hasRootAccess();
+	}
 }

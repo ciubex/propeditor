@@ -98,24 +98,31 @@ public class RestorePropertiesTask extends
 	 * Initiating the restore method.
 	 */
 	private void restoreTheProperties() {
-		boolean shouldMountSystem = application.getUnixShell()
-				.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
-						Constants.READ_WRITE) != true;
-		boolean continueRestore = true;
-		if (shouldMountSystem) {
-			continueRestore = application.getUnixShell().mountPartition(
-					Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
-		}
+		boolean shouldMountSystem = false;
+		boolean continueRestore = application.getUnixShell().hasRootAccess();
 		if (continueRestore) {
-			restoreBackupFile();
+			shouldMountSystem = application.getUnixShell()
+					.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
+							Constants.READ_WRITE) != true;
 			if (shouldMountSystem) {
-				application.getUnixShell().mountPartition(
-						Constants.SYSTEM_PARTITION, Constants.READ_ONLY);
+				continueRestore = application.getUnixShell().mountPartition(
+						Constants.SYSTEM_PARTITION, Constants.READ_WRITE);
+			}
+			if (continueRestore) {
+				restoreBackupFile();
+				if (shouldMountSystem) {
+					application.getUnixShell().mountPartition(
+							Constants.SYSTEM_PARTITION, Constants.READ_ONLY);
+				}
+			} else {
+				defaultResult.resultId = Constants.ERROR;
+				defaultResult.resultMessage = responder.getApplication().getString(
+						R.string.system_no_mount);
 			}
 		} else {
 			defaultResult.resultId = Constants.ERROR;
-			defaultResult.resultMessage = responder.getApplication().getString(
-					R.string.system_no_mount);
+			defaultResult.resultMessage = application
+					.getString(R.string.no_root_privilages);
 		}
 	}
 
