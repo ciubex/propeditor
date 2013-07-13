@@ -50,6 +50,9 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        <b>Version 1.2.6</b><br/>
+        - Changed the root command invocations.<br/>
+        <br/>
         <b>Version 1.2.5</b><br/>
         - Fix: mounting system partition only if is necessary.<br/>
         <br/>
@@ -93,6 +96,8 @@
     
     <string name="loading_exception">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s</string>
     <string name="saving_exception">Exception ocured during saving: %1$s\nException: %2$s\nMessage: %3$s</string>
+    <string name="backup_failed">Backing up the old file was failed!</string>
+    <string name="new_file_failed">Moving up the new file was failed!</string>
     <string name="file_not_exist">The file: %s don\'t exist!</string>
     <string name="file_saved">The file: %s successfully saved!</string>
     <string name="system_no_mount">Couldn\'t be mounted system partition!</string>

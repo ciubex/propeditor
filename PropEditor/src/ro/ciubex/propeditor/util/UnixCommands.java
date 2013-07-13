@@ -18,14 +18,15 @@
  */
 package ro.ciubex.propeditor.util;
 
-import java.io.Closeable;
-import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import ro.ciubex.shell.Command;
+import ro.ciubex.shell.RootShell;
 
 /**
  * This is an utility class used to launch Unix commands from the application.
@@ -34,16 +35,12 @@ import java.util.List;
  * 
  */
 public class UnixCommands {
-
-	private static final UnixCommands instance = new UnixCommands();
 	private List<Partition> partitions;
+	private RootShell rootShell;
 
-	private UnixCommands() {
+	public UnixCommands() {
+		rootShell = new RootShell();
 		populatePartitions();
-	}
-
-	public static UnixCommands getInstance() {
-		return instance;
 	}
 
 	/**
@@ -82,46 +79,7 @@ public class UnixCommands {
 	 * @return True if the command was successfully.
 	 */
 	public boolean runUnixCommand(String command) {
-		boolean result = false;
-		System.out.println("command:" + command);
-		Process process = null;
-		DataOutputStream out = null;
-		try {
-			process = Runtime.getRuntime().exec("su");
-			out = new DataOutputStream(process.getOutputStream());
-			out.writeBytes(command + "\n");
-			out.writeBytes("exit\n");
-			out.flush();
-			process.waitFor();
-			result = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			doClose(out);
-			if (process != null) {
-				doClose(process.getInputStream());
-				doClose(process.getErrorStream());
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * A generic closing method, to avoid many try catch blocks.
-	 * 
-	 * @param closeable
-	 *            An object to be closed.
-	 */
-	private void doClose(Closeable closeable) {
-		if (closeable != null) {
-			try {
-				closeable.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		return rootShell.addCommand(command).waitForFinish();
 	}
 
 	/**
@@ -150,24 +108,18 @@ public class UnixCommands {
 	 */
 	public boolean mountPartition(String partition, String mountType) {
 		Partition p = getPartition(partition);
-		boolean result = true;
+		boolean result = false;
 		if (p != null) {
 			boolean isMountMode = p.getFlags().contains(mountType);
 			if (!isMountMode) {
 				String command = "mount -o " + mountType + ",remount "
 						+ p.getDevice() + " " + p.getMountPoint();
-				if (runUnixCommand(command)) {
+				Command cmd = new Command(command,
+						"busybox "+command,
+						"toolbox "+command,
+						"/system/bin/toolbox "+command);
+				if (rootShell.addCommand(cmd).waitForFinish()) {
 					result = true;
-				} else if (runUnixCommand("busybox " + command)) {
-					result = true;
-				} else if (runUnixCommand("toolbox " + command)) {
-					result = true;
-				} else if (runUnixCommand("/system/bin/toolbox " + command)) {
-					result = true;
-				} else {
-					result = false;
-				}
-				if (result) {
 					populatePartitions();
 				}
 			}
@@ -189,5 +141,16 @@ public class UnixCommands {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Close the root shell.
+	 */
+	public void closeShell() {
+		try {
+			rootShell.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
