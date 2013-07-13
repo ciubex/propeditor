@@ -100,7 +100,7 @@ public class RestorePropertiesTask extends
 	private void restoreTheProperties() {
 		boolean shouldMountSystem = application.getUnixShell()
 				.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
-						Constants.READ_WRITE);
+						Constants.READ_WRITE) != true;
 		boolean continueRestore = true;
 		if (shouldMountSystem) {
 			continueRestore = application.getUnixShell().mountPartition(
@@ -125,10 +125,15 @@ public class RestorePropertiesTask extends
 	private void restoreBackupFile() {
 		String backupFileName = fileName + ".bak";
 		if (Utilities.existFile(backupFileName)) {
-			application.getUnixShell().runUnixCommand(
-					"mv " + backupFileName + " " + fileName);
-			defaultResult.resultMessage = responder.getApplication().getString(
-					R.string.file_restored, fileName);
+			if (application.getUnixShell().runUnixCommand(
+					"mv " + backupFileName + " " + fileName)) {
+				defaultResult.resultMessage = responder.getApplication()
+						.getString(R.string.file_restored, fileName);
+			} else {
+				defaultResult.resultId = Constants.ERROR;
+				defaultResult.resultMessage = responder.getApplication()
+						.getString(R.string.restore_file_failed);
+			}
 		} else {
 			defaultResult.resultId = Constants.ERROR;
 			defaultResult.resultMessage = responder.getApplication().getString(
