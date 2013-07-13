@@ -50,6 +50,9 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        <b>Version 1.2.7</b><br/>
+        - Fixed restore function.<br/>
+        <br/>
         <b>Version 1.2.6</b><br/>
         - Changed the root command invocations.<br/>
         <br/>
@@ -93,6 +96,7 @@
     <string name="restore">Restore confirmation</string>
     <string name="restore_confirmation">Are you sure to restore your build.prop file?\nBy restoring the file you will lose all modifications.</string>
     <string name="file_restored">The file: %s successfully restored!</string>
+    <string name="restore_file_failed">Restoring old file failed!</string>
     
     <string name="loading_exception">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s</string>
     <string name="saving_exception">Exception ocured during saving: %1$s\nException: %2$s\nMessage: %3$s</string>
