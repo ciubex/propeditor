@@ -22,6 +22,7 @@ import ro.ciubex.propeditor.R;
 import ro.ciubex.propeditor.activities.PropEditorActivity;
 import ro.ciubex.propeditor.properties.Entities;
 import ro.ciubex.propeditor.properties.Entity;
+import ro.ciubex.propeditor.util.Utilities;
 import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
@@ -89,10 +90,15 @@ public class EditorDialog extends BaseDialog {
 			if (entity == null) {
 				entity = new Entity(key, content);
 				properties.add(entity);
+				properties.setModified(true);
 				((PropEditorActivity) parentActivity).reloadAdapter();
 			} else {
 				entity.setKey(key);
 				entity.setContent(content);
+				if (Utilities.stringEquals(key, entity.getKey())
+						|| Utilities.stringEquals(content, entity.getContent())) {
+					properties.setModified(true);
+				}
 			}
 		}
 	}

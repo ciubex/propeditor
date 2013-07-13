@@ -103,6 +103,10 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     
+    <!-- Reload -->
+    <string name="reload">Reload confirmation</string>
+    <string name="reload_confirmation">Are you sure to reload the build.prop file?\nBy reloading the file you will lose all modifications.</string>
+    
     <!-- Restore -->
     <string name="restore">Restore confirmation</string>
     <string name="restore_confirmation">Are you sure to restore your build.prop file?\nBy restoring the file you will lose all modifications.</string>

@@ -34,7 +34,8 @@ public class PropEditorActivity extends BaseActivity implements
 
 	private final int CONFIRM_ID_DELETE = 0;
 	private final int CONFIRM_ID_RESTORE = 1;
-	private final int CONFIRM_ID_DONATE = 2;
+	private final int CONFIRM_ID_RELOAD = 2;
+	private final int CONFIRM_ID_DONATE = 3;
 
 	/**
 	 * The method invoked when the activity is creating
@@ -177,6 +178,7 @@ public class PropEditorActivity extends BaseActivity implements
 	public void endLoadProperties(DefaultAsyncTaskResult result) {
 		propertiesList.removeAllViewsInLayout();
 		reloadAdapter();
+		app.getEntities().setModified(false);
 		app.hideProgressDialog();
 		if (Constants.OK == result.resultId) {
 			app.showMessageInfo(this, result.resultMessage);
@@ -275,10 +277,13 @@ public class PropEditorActivity extends BaseActivity implements
 			Entity entity = (Entity) anObject;
 			app.getEntities().remove(entity);
 			reloadAdapter();
+			app.getEntities().setModified(true);
 		} else if (CONFIRM_ID_RESTORE == confirmationId) {
 			new RestorePropertiesTask(this, BUILD_PROP).execute();
 		} else if (CONFIRM_ID_DONATE == confirmationId) {
 			startBrowserWithPage(R.string.donate_url);
+		} else if (CONFIRM_ID_RELOAD == confirmationId) {
+			doListReload();
 		}
 	}
 
@@ -299,9 +304,25 @@ public class PropEditorActivity extends BaseActivity implements
 	 * Invoked when is chose the Reload menu item.
 	 */
 	private void onMenuItemReload() {
+		if (app.getEntities().isModified()) {
+			showConfirmationDialog(R.string.reload,
+					app.getString(R.string.reload_confirmation),
+					CONFIRM_ID_RELOAD, null);
+		} else {
+			doListReload();
+		}
+	}
+
+	/**
+	 * Method used to invoke the list reloading.
+	 */
+	private void doListReload() {
 		loadPropertiesList();
 	}
 
+	/**
+	 * This is invoked when the user chose the restore menu item.
+	 */
 	private void onMenuItemRestore() {
 		showConfirmationDialog(R.string.restore,
 				app.getString(R.string.restore_confirmation),
