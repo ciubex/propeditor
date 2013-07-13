@@ -24,6 +24,7 @@
     <string name="menu_item_about">About</string>
     <string name="menu_item_license">Show License</string>
     <string name="menu_item_back">Back</string>
+    <string name="menu_item_donate">Donate</string>
     
     <!-- Context menu -->
     <string name="item_edit">Choose:</string>
@@ -50,8 +51,13 @@
         This file is important for your Android system and is stored on the <b>/system</b> partition.<br/>
         Normaly the full path is: <b>/system/build.prop</b><br/>
         <br/>
+        Thank you for using this application!<br/>
+        <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        <b>Version 1.4</b><br/>
+        - Added donation link.<br/>
+        <br/>
         <b>Version 1.3</b><br/>
         - Added an alert dialog to be showed the error messages.<br/>
         <br/>
@@ -123,5 +129,10 @@
     <string name="no_folder_path">You do not provided any folder name!</string>
     <string name="current_folder">..</string>
     <string name="folder_icon">x</string>
+    
+    <!-- Donation -->
+    <string name="donate_title">Donation confirmation</string>
+    <string name="donate_message">If you appreciate this application, please do a donation!\nPressing YES button, you will be sent using your default browser to a PayPal donnation page.\nThank you for using this application!</string>
+    <string name="donate_url"><Data><![CDATA[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=claudiu_ciobotariu%40yahoo%2ecom&lc=RO&item_name=Ciubex&item_number=PropEditor%20Donation&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted]]></Data></string>
 
 </resources>
