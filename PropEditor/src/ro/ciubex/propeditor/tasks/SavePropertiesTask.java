@@ -85,10 +85,20 @@ public class SavePropertiesTask extends
 			defaultResult.resultMessage = application
 					.getString(R.string.destination_folder_null);
 		}
-		if (continueSave && isSystem) {
-			shouldMountSystem = application.getUnixShell()
-					.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
-							Constants.READ_WRITE) != true;
+		if (continueSave) {
+			continueSave = application.getUnixShell().hasRootAccess();
+			if (!continueSave) {
+				defaultResult.resultId = Constants.ERROR;
+				defaultResult.resultMessage = application
+						.getString(R.string.no_root_privilages);
+			}
+		}
+		if (continueSave) {
+			if (isSystem) {
+				shouldMountSystem = application.getUnixShell()
+						.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
+				Constants.READ_WRITE) != true;
+			}
 			if (shouldMountSystem) {
 				continueSave = application.getUnixShell().mountPartition(
 						Constants.SYSTEM_PARTITION, Constants.READ_WRITE);

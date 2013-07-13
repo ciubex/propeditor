@@ -11,6 +11,8 @@
     <string name="saving_properties">Save the properties&#8230;</string>
     <string name="properties_loaded">Were loaded %d properties</string>
     <string name="no_properties">No properties</string>
+    <string name="error_occurred">An error occurred:</string>
+    <string name="no_root_privilages">You do not have root privilages!</string>
     
     <!-- Menu items -->
     <string name="menu_item_reload">Reload</string>
@@ -50,6 +52,9 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        <b>Version 1.3</b><br/>
+        - Added an alert dialog to be showed the error messages.<br/>
+        <br/>
         <b>Version 1.2.7</b><br/>
         - Fixed restore function.<br/>
         <br/>

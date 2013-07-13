@@ -22,9 +22,11 @@ import java.util.Locale;
 
 import ro.ciubex.propeditor.properties.Entities;
 import ro.ciubex.propeditor.util.UnixCommands;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.widget.Toast;
 
 /**
@@ -53,9 +55,10 @@ public class PropEditorApplication extends Application {
 		waitString = getString(R.string.please_wait);
 		defaultLocale = Locale.getDefault();
 	}
-	
+
 	/**
 	 * Obtain the current unix shell.
+	 * 
 	 * @return Unix shell.
 	 */
 	public UnixCommands getUnixShell() {
@@ -195,7 +198,18 @@ public class PropEditorApplication extends Application {
 	 */
 	public void showMessageError(Context context, String message) {
 		if (message != null && message.length() > 0) {
-			Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+			alertDialog.setTitle(getString(R.string.error_occurred));
+			alertDialog.setMessage(message);
+			
+			AlertDialog alert = alertDialog.create();
+			alert.setButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					return;
+				}
+			});
+			
+			alert.show();
 		}
 	}
 
@@ -216,5 +230,5 @@ public class PropEditorApplication extends Application {
 	public Entities getEntities() {
 		return properties;
 	}
-	
+
 }
