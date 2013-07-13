@@ -20,7 +20,6 @@ package ro.ciubex.propeditor.util;
 
 import java.io.File;
 
-
 /**
  * Utilities class
  * 
@@ -28,7 +27,7 @@ import java.io.File;
  * 
  */
 public class Utilities {
-	
+
 	/**
 	 * Check if the file exist.
 	 * 
@@ -39,5 +38,22 @@ public class Utilities {
 	public static boolean existFile(String fileName) {
 		File file = new File(fileName);
 		return file.exists();
+	}
+
+	/**
+	 * Check if two strings are equals.
+	 * 
+	 * @param string1
+	 *            First string to check.
+	 * @param string2
+	 *            Second string to check.
+	 * @return True if the both strings are equals.
+	 */
+	public static boolean stringEquals(String string1, String string2) {
+		boolean result = string1 != null && string2 != null;
+		if (result) {
+			result = string1.equals(string2);
+		}
+		return result;
 	}
 }

@@ -39,6 +39,7 @@ public class Entities implements Cloneable {
 	 * properties, comments and empty lines
 	 */
 	List<Entity> entities;
+	private boolean modified;
 	int count;
 
 	/**
@@ -580,7 +581,7 @@ public class Entities implements Cloneable {
 			case ':': // Fall through
 			case '#': // Fall through
 			case '!':
-//				outBuffer.append('\\');
+				// outBuffer.append('\\');
 				outBuffer.append(aChar);
 				break;
 			default:
@@ -612,4 +613,23 @@ public class Entities implements Cloneable {
 	/** A table of hex digits */
 	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6',
 			'7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+	/**
+	 * Check if the entities are modified.
+	 * 
+	 * @return True if the entities are modified.
+	 */
+	public boolean isModified() {
+		return modified;
+	}
+
+	/**
+	 * Set the modified entities flag.
+	 * 
+	 * @param modified
+	 *            The modified entities flag.
+	 */
+	public void setModified(boolean modified) {
+		this.modified = modified;
+	}
 }
