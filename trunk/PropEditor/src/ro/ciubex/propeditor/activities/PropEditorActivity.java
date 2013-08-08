@@ -19,7 +19,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -93,19 +93,15 @@ public class PropEditorActivity extends BaseActivity implements
 	private void prepareMainListView() {
 		propertiesList = (ListView) findViewById(R.id.properties_list);
 		propertiesList.setEmptyView(findViewById(R.id.empty_list_view));
-		propertiesList
-				.setOnItemLongClickListener(new OnItemLongClickListener() {
-					@Override
-					public boolean onItemLongClick(AdapterView<?> parent,
-							View v, int position, long id) {
-						boolean isProcessed = false;
-						if (position > -1 && position < adapter.getCount()) {
-							isProcessed = true;
-							showItemDialogMenu(position);
-						}
-						return isProcessed;
-					}
-				});
+		propertiesList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (position > -1 && position < adapter.getCount()) {
+					showItemDialogMenu(position);
+				}
+			}
+		});
 		if (app.getEntities().isEmpty()) {
 			loadPropertiesList();
 		} else {

@@ -55,6 +55,12 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        Version 1.5<br/>
+        - Replaced the long click with simple click to access the context menu.<br/>
+        <br/>
+        Version 1.4.2<br/>
+        - Small fix related with the properties list modifications.<br/>
+        <br/>
         Version 1.4.1<br/>
         - Added a confirmation dialog when the list is reloading.<br/>
         <br/>

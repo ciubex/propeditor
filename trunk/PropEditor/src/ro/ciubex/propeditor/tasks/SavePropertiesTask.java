@@ -194,8 +194,10 @@ public class SavePropertiesTask extends
 		String prvFile = privateDir + File.separator
 				+ destinationFile.getName();
 		if (existDestinationFolder()) {
-			if (!application.getUnixShell().runUnixCommand(
+			if (application.getUnixShell().runUnixCommand(
 					"cat " + prvFile + " > " + fileName)) {
+				application.getEntities().setModified(false);
+			} else {
 				defaultResult.resultId = Constants.ERROR;
 				defaultResult.resultMessage = application.getString(
 						R.string.new_file_failed);
