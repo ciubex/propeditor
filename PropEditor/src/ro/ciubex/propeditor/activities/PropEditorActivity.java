@@ -36,6 +36,7 @@ public class PropEditorActivity extends BaseActivity implements
 	private final int CONFIRM_ID_RESTORE = 1;
 	private final int CONFIRM_ID_RELOAD = 2;
 	private final int CONFIRM_ID_DONATE = 3;
+	private final int CONFIRM_ID_REBOOT = 4;
 
 	/**
 	 * The method invoked when the activity is creating
@@ -126,6 +127,10 @@ public class PropEditorActivity extends BaseActivity implements
 		case R.id.item_exit:
 			processed = true;
 			onExit();
+			break;
+		case R.id.item_reboot:
+			processed = true;
+			onMenuItemReboot();
 			break;
 		case R.id.item_add:
 			processed = true;
@@ -269,17 +274,37 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	@Override
 	protected void onConfirmation(int confirmationId, Object anObject) {
-		if (CONFIRM_ID_DELETE == confirmationId && anObject != null) {
-			Entity entity = (Entity) anObject;
+		switch (confirmationId) {
+		case CONFIRM_ID_DELETE:
+			doDeleteEntity(anObject);
+			break;
+		case CONFIRM_ID_RESTORE:
+			new RestorePropertiesTask(this, BUILD_PROP).execute();
+			break;
+		case CONFIRM_ID_DONATE:
+			startBrowserWithPage(R.string.donate_url);
+			break;
+		case CONFIRM_ID_RELOAD:
+			doListReload();
+			break;
+		case CONFIRM_ID_REBOOT:
+			doReboot();
+			break;
+		}
+	}
+
+	/**
+	 * Method used to delete an entity from the list.
+	 * 
+	 * @param anEntity
+	 *            Entity to be deleted.
+	 */
+	private void doDeleteEntity(Object anEntity) {
+		if (anEntity instanceof Entity) {
+			Entity entity = (Entity) anEntity;
 			app.getEntities().remove(entity);
 			reloadAdapter();
 			app.getEntities().setModified(true);
-		} else if (CONFIRM_ID_RESTORE == confirmationId) {
-			new RestorePropertiesTask(this, BUILD_PROP).execute();
-		} else if (CONFIRM_ID_DONATE == confirmationId) {
-			startBrowserWithPage(R.string.donate_url);
-		} else if (CONFIRM_ID_RELOAD == confirmationId) {
-			doListReload();
 		}
 	}
 
@@ -294,6 +319,19 @@ public class PropEditorActivity extends BaseActivity implements
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
 		startActivity(i);
+	}
+
+	/**
+	 * Method invoked when is clicked the reboot menu item.
+	 */
+	private void onMenuItemReboot() {
+		if (app.getUnixShell().hasRootAccess()) {
+			showConfirmationDialog(R.string.reboot,
+					app.getString(R.string.reboot_confirmation),
+					CONFIRM_ID_REBOOT, null);
+		} else {
+			app.showMessageError(this, R.string.no_root_privilages);
+		}
 	}
 
 	/**
@@ -314,6 +352,14 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	private void doListReload() {
 		loadPropertiesList();
+	}
+
+	/**
+	 * Method used to reboot the device.
+	 */
+	private void doReboot() {
+		app.showProgressDialog(this, R.string.rebooting);
+		app.getUnixShell().runUnixCommand("reboot");
 	}
 
 	/**
