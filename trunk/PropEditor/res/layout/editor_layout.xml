@@ -31,19 +31,19 @@
         android:gravity="center_horizontal" >
 
         <Button
-            android:id="@+id/btn_ok"
+            android:id="@+id/btn_cancel"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="@string/ok" />
+            android:text="@string/cancel" />
 
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_ok"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/btn_ok"
-            android:text="@string/cancel" />
+            android:layout_toRightOf="@+id/btn_cancel"
+            android:text="@string/ok" />
     </RelativeLayout>
 
 </LinearLayout>

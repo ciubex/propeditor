@@ -19,6 +19,7 @@
     <string name="menu_item_restore">Restore</string>
     <string name="menu_item_add">Add</string>
     <string name="menu_item_exit">Exit</string>
+    <string name="menu_item_reboot">Reboot</string>
     <string name="menu_item_save">Save</string>
     <string name="menu_item_save_to">Save to&#8230;</string>
     <string name="menu_item_about">About</string>
@@ -42,6 +43,57 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     
+    <!-- License -->
+    <string name="license">License</string>
+    
+    <!-- Remove property -->
+    <string name="restoring">Restoring&#8230;</string>
+    <string name="remove_property">Remove property</string>
+    <string name="remove_property_question">Do you want to remove the property:\n\"%s\"?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    
+    <!-- Reboot -->
+    <string name="reboot">Reboot</string>
+    <string name="reboot_confirmation">Are you sure to reboot your device?</string>
+    <string name="rebooting">Rebooting&#8230;</string>
+    
+    <!-- Reload -->
+    <string name="reload">Reload confirmation</string>
+    <string name="reload_confirmation">Are you sure to reload the build.prop file?\nBy reloading the file you will lose all modifications.</string>
+    
+    <!-- Restore -->
+    <string name="restore">Restore confirmation</string>
+    <string name="restore_confirmation">Are you sure to restore your build.prop file?\nBy restoring the file you will lose all modifications.</string>
+    <string name="file_restored">The file: %s successfully restored!</string>
+    <string name="restore_file_failed">Restoring old file failed!</string>
+    
+    <string name="loading_exception">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s</string>
+    <string name="saving_exception">Exception ocured during saving: %1$s\nException: %2$s\nMessage: %3$s</string>
+    <string name="backup_failed">Backing up the old file was failed!</string>
+    <string name="new_file_failed">Moving up the new file was failed!</string>
+    <string name="file_not_exist">The file: %s don\'t exist!</string>
+    <string name="file_saved">The file: %s successfully saved!</string>
+    <string name="system_no_mount">Couldn\'t be mounted system partition!</string>
+    <string name="destination_folder_null">The destination folder should not be null!</string>
+    <string name="destination_folder_not_exist">The destination folder %s does not exist!</string>
+    
+    <!-- Save to -->
+    <string name="save_to">Save to&#8230;</string>
+    <string name="save_to_info">Chose a folder to save current properties. Default is your external phone storage, SD Card.</string>
+    <string name="points">&#8230;</string>
+    <string name="folders">Folders:</string>
+    <string name="sdcard">/sdcard</string>
+    <string name="no_folders">No folders</string>
+    <string name="no_folder_path">You do not provided any folder name!</string>
+    <string name="current_folder">..</string>
+    <string name="folder_icon">x</string>
+    
+    <!-- Donation -->
+    <string name="donate_title">Donation confirmation</string>
+    <string name="donate_message">If you appreciate this application, please do a donation!\nPressing YES button, you will be sent using your default browser to a PayPal donnation page.\nThank you for using this application!</string>
+    <string name="donate_url"><Data><![CDATA[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=claudiu_ciobotariu%40yahoo%2ecom&lc=RO&item_name=Ciubex&item_number=PropEditor%20Donation&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted]]></Data></string>
+    
     <!-- About -->
     <string name="about">About</string>
     <string name="about_text"><Data><![CDATA[
@@ -55,6 +107,12 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        Version 1.7<br/>
+        - Added reboot option, for rooted phones.<br/>
+        <br/>
+        Version 1.6<br/>
+        - Refactored the OK and Cancel buttons positions.<br/>
+        <br/>
         Version 1.5<br/>
         - Replaced the long click with simple click to access the context menu.<br/>
         <br/>
@@ -101,51 +159,5 @@
 		<br/>
 		<b>Version 1.0</b><br/>
 		- First version.]]></Data></string>
-    
-    <!-- License -->
-    <string name="license">License</string>
-    
-    <!-- Remove property -->
-    <string name="restoring">Restoring&#8230;</string>
-    <string name="remove_property">Remove property</string>
-    <string name="remove_property_question">Do you want to remove the property:\n\"%s\"?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    
-    <!-- Reload -->
-    <string name="reload">Reload confirmation</string>
-    <string name="reload_confirmation">Are you sure to reload the build.prop file?\nBy reloading the file you will lose all modifications.</string>
-    
-    <!-- Restore -->
-    <string name="restore">Restore confirmation</string>
-    <string name="restore_confirmation">Are you sure to restore your build.prop file?\nBy restoring the file you will lose all modifications.</string>
-    <string name="file_restored">The file: %s successfully restored!</string>
-    <string name="restore_file_failed">Restoring old file failed!</string>
-    
-    <string name="loading_exception">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s</string>
-    <string name="saving_exception">Exception ocured during saving: %1$s\nException: %2$s\nMessage: %3$s</string>
-    <string name="backup_failed">Backing up the old file was failed!</string>
-    <string name="new_file_failed">Moving up the new file was failed!</string>
-    <string name="file_not_exist">The file: %s don\'t exist!</string>
-    <string name="file_saved">The file: %s successfully saved!</string>
-    <string name="system_no_mount">Couldn\'t be mounted system partition!</string>
-    <string name="destination_folder_null">The destination folder should not be null!</string>
-    <string name="destination_folder_not_exist">The destination folder %s does not exist!</string>
-    
-    <!-- Save to -->
-    <string name="save_to">Save to&#8230;</string>
-    <string name="save_to_info">Chose a folder to save current properties. Default is your external phone storage, SD Card.</string>
-    <string name="points">&#8230;</string>
-    <string name="folders">Folders:</string>
-    <string name="sdcard">/sdcard</string>
-    <string name="no_folders">No folders</string>
-    <string name="no_folder_path">You do not provided any folder name!</string>
-    <string name="current_folder">..</string>
-    <string name="folder_icon">x</string>
-    
-    <!-- Donation -->
-    <string name="donate_title">Donation confirmation</string>
-    <string name="donate_message">If you appreciate this application, please do a donation!\nPressing YES button, you will be sent using your default browser to a PayPal donnation page.\nThank you for using this application!</string>
-    <string name="donate_url"><Data><![CDATA[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=claudiu_ciobotariu%40yahoo%2ecom&lc=RO&item_name=Ciubex&item_number=PropEditor%20Donation&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted]]></Data></string>
 
 </resources>
