@@ -52,7 +52,7 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		app = (PropEditorApplication) getApplication();
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 	}
 
 	/**
@@ -99,6 +99,7 @@ public class BaseActivity extends Activity {
 		if (showMenu) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(menuId, menu);
+			super.onCreateOptionsMenu(menu);
 			processed = true;
 		}
 		return processed;
