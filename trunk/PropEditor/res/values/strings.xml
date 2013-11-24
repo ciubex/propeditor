@@ -13,6 +13,7 @@
     <string name="no_properties">No properties</string>
     <string name="error_occurred">An error occurred:</string>
     <string name="no_root_privilages">You do not have root privilages!</string>
+    <string name="unable_to_read">Unable to read %s file.</string>
     
     <!-- Menu items -->
     <string name="menu_item_reload">Reload</string>
@@ -107,6 +108,9 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        Version 1.9<br/>
+        - A fix related with the permission issues.<br/>
+        <br/>
         Version 1.8<br/>
         - Small minor fixes.<br/>
         <br/>

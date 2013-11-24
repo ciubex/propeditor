@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ro.ciubex.propeditor.PropEditorApplication;
 import ro.ciubex.propeditor.R;
 import ro.ciubex.propeditor.models.Constants;
 import ro.ciubex.propeditor.properties.Entities;
@@ -51,7 +52,9 @@ public class LoadPropertiesTask extends
 	}
 
 	private Responder responder;
+	private PropEditorApplication application;
 	private DefaultAsyncTaskResult defaultResult;
+	private String privateDir;
 	private String fileName;
 	private Entities properties;
 
@@ -70,6 +73,8 @@ public class LoadPropertiesTask extends
 		this.responder = responder;
 		this.fileName = fileName;
 		this.properties = properties;
+		application = (PropEditorApplication) responder.getApplication();
+		privateDir = application.getFilesDir().getAbsolutePath();
 	}
 
 	/**
@@ -102,35 +107,56 @@ public class LoadPropertiesTask extends
 		responder.endLoadProperties(result);
 	}
 
+	/**
+	 * Open and load properties file.
+	 */
 	private void loadTheProperties() {
 		File f = new File(fileName);
-		if (f.exists()) {
-			InputStream inputStream = null;
-			try {
-				inputStream = new FileInputStream(f);
-				properties.load(inputStream);
-				defaultResult.resultMessage = responder.getApplication()
-						.getString(R.string.properties_loaded,
-								properties.size());
-			} catch (FileNotFoundException e) {
-				defaultResult.resultId = Constants.ERROR;
-				defaultResult.resultMessage = responder.getApplication()
-						.getString(R.string.loading_exception, fileName,
-								"FileNotFoundException", e.getMessage());
-				e.printStackTrace();
-			} catch (IOException e) {
-				defaultResult.resultId = Constants.ERROR;
-				defaultResult.resultMessage = responder.getApplication()
-						.getString(R.string.loading_exception, fileName,
-								"IOException", e.getMessage());
-				e.printStackTrace();
-			} finally {
-				if (inputStream != null) {
-					try {
-						inputStream.close();
-					} catch (IOException e) {
-						/* ignored */
+		if (f.exists() && f.isFile()) {
+			if (!f.canRead()) {
+				if (application.getUnixShell().hasRootAccess()) {
+					f = prepareOriginalFile();
+				}
+			}
+			if (f != null && f.canRead()) {
+				InputStream inputStream = null;
+				try {
+					inputStream = new FileInputStream(f);
+					properties.load(inputStream);
+					defaultResult.resultMessage = responder.getApplication()
+							.getString(R.string.properties_loaded,
+									properties.size());
+				} catch (FileNotFoundException e) {
+					defaultResult.resultId = Constants.ERROR;
+					defaultResult.resultMessage = responder.getApplication()
+							.getString(R.string.loading_exception, fileName,
+									"FileNotFoundException", e.getMessage());
+					e.printStackTrace();
+				} catch (IOException e) {
+					defaultResult.resultId = Constants.ERROR;
+					defaultResult.resultMessage = responder.getApplication()
+							.getString(R.string.loading_exception, fileName,
+									"IOException", e.getMessage());
+					e.printStackTrace();
+				} finally {
+					if (inputStream != null) {
+						try {
+							inputStream.close();
+						} catch (IOException e) {
+							/* ignored */
+						}
 					}
+				}
+			} else {
+				if (application.getUnixShell().hasRootAccess()) {
+					defaultResult.resultId = Constants.ERROR;
+					defaultResult.resultMessage = responder.getApplication()
+							.getString(R.string.unable_to_read, fileName,
+									"FileNotFoundException");
+				} else {
+					defaultResult.resultId = Constants.ERROR;
+					defaultResult.resultMessage = responder.getApplication()
+							.getString(R.string.no_root_privilages);
 				}
 			}
 		} else {
@@ -138,6 +164,31 @@ public class LoadPropertiesTask extends
 			defaultResult.resultMessage = responder.getApplication().getString(
 					R.string.file_not_exist, fileName);
 		}
+	}
+
+	/**
+	 * Create a copy of original file on the private data folder to be read.
+	 * 
+	 * @return The readable file or null if is not available.
+	 */
+	private File prepareOriginalFile() {
+		File destFile = new File(privateDir + File.separator + "tmp"
+				+ File.separator + "build.prop");
+		if (destFile.exists()) {
+			destFile.delete();
+		} else {
+			if (!destFile.getParentFile().exists()) {
+				destFile.getParentFile().getAbsoluteFile().mkdirs();
+			}
+		}
+		if (application.getUnixShell().runUnixCommand(
+				"cat " + fileName + " > " + destFile.getAbsolutePath())) {
+			application.getUnixShell().runUnixCommand(
+					"chmod 666 " + destFile.getAbsolutePath());
+		} else {
+			destFile = null;
+		}
+		return destFile;
 	}
 
 }
