@@ -11,6 +11,7 @@ import ro.ciubex.propeditor.tasks.LoadPropertiesTask;
 import ro.ciubex.propeditor.tasks.RestorePropertiesTask;
 import ro.ciubex.propeditor.tasks.SavePropertiesTask;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -316,9 +317,11 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	private void startBrowserWithPage(int urlResourceId) {
 		String url = app.getString(urlResourceId);
-		Intent i = new Intent(Intent.ACTION_VIEW);
-		i.setData(Uri.parse(url));
-		startActivity(i);
+		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		try {
+			startActivity(i);
+		} catch (ActivityNotFoundException exception) {
+		}
 	}
 
 	/**

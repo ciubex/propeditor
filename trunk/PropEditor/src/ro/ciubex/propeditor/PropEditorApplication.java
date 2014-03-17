@@ -21,7 +21,7 @@ package ro.ciubex.propeditor;
 import java.util.Locale;
 
 import ro.ciubex.propeditor.properties.Entities;
-import ro.ciubex.propeditor.util.UnixCommands;
+import ro.ciubex.shell.UnixCommands;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;

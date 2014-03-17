@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ro.ciubex.propeditor.util;
+package ro.ciubex.shell;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,9 +24,6 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import ro.ciubex.shell.Command;
-import ro.ciubex.shell.RootShell;
 
 /**
  * This is an utility class used to launch Unix commands from the application.
@@ -72,6 +69,21 @@ public class UnixCommands {
 	}
 
 	/**
+	 * Method used to reload partitions info.
+	 */
+	public void reloadPartitions() {
+		populatePartitions();
+	}
+
+	/**
+	 * Obtain partitions list.
+	 * @return The partitions.
+	 */
+	public List<Partition> getPartitions() {
+		return partitions;
+	}
+
+	/**
 	 * Try to run an Unix command with super user privileges.
 	 * 
 	 * @param command
@@ -114,14 +126,34 @@ public class UnixCommands {
 			if (!isMountMode) {
 				String command = "mount -o " + mountType + ",remount "
 						+ p.getDevice() + " " + p.getMountPoint();
-				Command cmd = new Command(command,
-						"busybox "+command,
-						"toolbox "+command,
-						"/system/bin/toolbox "+command);
+				Command cmd = new Command(command, "busybox " + command,
+						"toolbox " + command, "/system/bin/toolbox " + command);
 				if (rootShell.addCommand(cmd).waitForFinish()) {
 					result = true;
 					populatePartitions();
 				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Unmount a partition.
+	 * 
+	 * @param partition
+	 *            The partition to be unmounted.
+	 * @return True if the partition was unmounted.
+	 */
+	public boolean unmountPartition(String partition) {
+		Partition p = getPartition(partition);
+		boolean result = false;
+		if (p != null) {
+			String command = "umount " + p.getMountPoint();
+			Command cmd = new Command(command, "busybox " + command, "toolbox "
+					+ command, "/system/bin/toolbox " + command);
+			if (rootShell.addCommand(cmd).waitForFinish()) {
+				result = true;
+				populatePartitions();
 			}
 		}
 		return result;
@@ -142,7 +174,7 @@ public class UnixCommands {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Close the root shell.
 	 */
