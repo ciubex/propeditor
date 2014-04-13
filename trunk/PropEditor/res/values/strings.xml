@@ -108,6 +108,9 @@
         <br/>
         <hr />
         <u><b>Change log:</b></u><br/>
+        Version 1.9.2<br/>
+        - Modified about window to use scroll view.<br/>
+        <br/>
         Version 1.9<br/>
         - A fix related with the permission issues.<br/>
         <br/>
