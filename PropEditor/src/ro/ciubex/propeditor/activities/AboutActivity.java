@@ -44,8 +44,8 @@ public class AboutActivity extends BaseActivity {
 		setContentView(R.layout.about_layout);
 
 		TextView tv = (TextView) findViewById(R.id.aboutTextView);
-		tv.setText(Html.fromHtml(prepareAboutText()));
 		tv.setMovementMethod(LinkMovementMethod.getInstance());
+		tv.setText(Html.fromHtml(prepareAboutText()));
 
 		setMenuId(R.menu.about_menu);
 	}
