@@ -24,7 +24,6 @@ import ro.ciubex.propeditor.models.Constants;
 import ro.ciubex.propeditor.properties.Entities;
 import ro.ciubex.propeditor.tasks.DefaultAsyncTaskResult;
 import ro.ciubex.propeditor.tasks.SavePropertiesTask;
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
@@ -100,7 +99,6 @@ public class SaveToDialog extends BaseDialog implements
 	 * 
 	 * @return The external store path.
 	 */
-	@SuppressLint("SdCardPath")
 	private String getExternalStoragePath() {
 		String path = "/sdcard";
 		String state = Environment.getExternalStorageState();

@@ -9,7 +9,7 @@
     <string name="filtering">Filtering&#8230;</string>
     <string name="loading_properties">Read the properties&#8230;</string>
     <string name="saving_properties">Save the properties&#8230;</string>
-    <string name="properties_loaded">Were loaded %d properties</string>
+    <string name="properties_loaded">Were loaded %d properties.</string>
     <string name="no_properties">No properties</string>
     <string name="error_occurred">An error occurred:</string>
     <string name="no_root_privilages">You do not have root privilages!</string>
