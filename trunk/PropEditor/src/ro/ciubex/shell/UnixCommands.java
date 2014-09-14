@@ -49,8 +49,9 @@ public class UnixCommands {
 		} else {
 			partitions.clear();
 		}
+		LineNumberReader lnr = null;
 		try {
-			LineNumberReader lnr = new LineNumberReader(new FileReader(
+			lnr = new LineNumberReader(new FileReader(
 					"/proc/mounts"));
 			String line;
 			String[] fields;
@@ -65,6 +66,14 @@ public class UnixCommands {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (lnr != null) {
+				try {
+					lnr.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

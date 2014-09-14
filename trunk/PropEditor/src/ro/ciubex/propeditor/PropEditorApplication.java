@@ -198,18 +198,18 @@ public class PropEditorApplication extends Application {
 	 */
 	public void showMessageError(Context context, String message) {
 		if (message != null && message.length() > 0) {
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-			alertDialog.setTitle(getString(R.string.error_occurred));
-			alertDialog.setMessage(message);
-			
-			AlertDialog alert = alertDialog.create();
-			alert.setButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					return;
-				}
-			});
-			
-			alert.show();
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.error_occurred)
+					.setMessage(message)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setNeutralButton(R.string.ok,
+							new DialogInterface.OnClickListener() {
+
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									return;
+								}
+							}).show();
 		}
 	}
 
