@@ -34,6 +34,7 @@ import android.widget.TextView;
  */
 public class AboutActivity extends BaseActivity {
 	private String version = "1.0";
+	private TextView tytitle, tytext;
 
 	/**
 	 * Prepare About activity
@@ -42,6 +43,9 @@ public class AboutActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about_layout);
+
+		tytitle = (TextView) findViewById(R.id.thankYouTitle);
+		tytext = (TextView) findViewById(R.id.thankYouText);
 
 		TextView tv = (TextView) findViewById(R.id.aboutTextView);
 		tv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -65,6 +69,10 @@ public class AboutActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 		aboutText = getString(R.string.about_text, version);
+		if (app.isProPresent()) {
+			tytitle.setVisibility(TextView.VISIBLE);
+			tytext.setVisibility(TextView.VISIBLE);
+		}
 		return aboutText;
 	}
 

@@ -27,6 +27,8 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -37,6 +39,7 @@ import android.widget.Toast;
  * 
  */
 public class PropEditorApplication extends Application {
+	private final String TAG = getClass().getName();
 	private ProgressDialog progressDialog;
 	private Entities properties;
 	private String waitString;
@@ -230,5 +233,22 @@ public class PropEditorApplication extends Application {
 	public Entities getEntities() {
 		return properties;
 	}
-
+	
+	/**
+	 * Check for pro version.
+	 * 
+	 * @return True if pro version exist.
+	 */
+	public boolean isProPresent() {
+		PackageManager pm = getPackageManager();
+		boolean success = false;
+		try {
+			success = (PackageManager.SIGNATURE_MATCH == pm.checkSignatures(
+					this.getPackageName(), "ro.ciubex.propeditorpro"));
+			Log.d(TAG, "isProPresent: " + success);
+		} catch (Exception e) {
+			Log.e(TAG, "isProPresent: " + e.getMessage(), e);
+		}
+		return success;
+	}
 }
