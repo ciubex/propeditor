@@ -362,7 +362,7 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	private void doReboot() {
 		app.showProgressDialog(this, R.string.rebooting);
-		app.getUnixShell().runUnixCommand("reboot");
+		app.getUnixShell().runUnixCommand("reboot now");
 	}
 
 	/**
