@@ -201,18 +201,24 @@ public class PropEditorApplication extends Application {
 	 */
 	public void showMessageError(Context context, String message) {
 		if (message != null && message.length() > 0) {
-			new AlertDialog.Builder(this)
-					.setTitle(R.string.error_occurred)
-					.setMessage(message)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setNeutralButton(R.string.ok,
-							new DialogInterface.OnClickListener() {
+			try {
+				new AlertDialog.Builder(context)
+						.setTitle(R.string.error_occurred)
+						.setMessage(message)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setNeutralButton(R.string.ok,
+								new DialogInterface.OnClickListener() {
 
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									return;
-								}
-							}).show();
+									public void onClick(DialogInterface dialog,
+											int whichButton) {
+										return;
+									}
+								}).show();
+			} catch (Exception e) {
+				Log.e(TAG,
+						"message:" + message + " Exception:" + e.getMessage(),
+						e);
+			}
 		}
 	}
 
@@ -233,7 +239,7 @@ public class PropEditorApplication extends Application {
 	public Entities getEntities() {
 		return properties;
 	}
-	
+
 	/**
 	 * Check for pro version.
 	 * 
