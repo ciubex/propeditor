@@ -10,6 +10,7 @@ import ro.ciubex.propeditor.tasks.DefaultAsyncTaskResult;
 import ro.ciubex.propeditor.tasks.LoadPropertiesTask;
 import ro.ciubex.propeditor.tasks.RestorePropertiesTask;
 import ro.ciubex.propeditor.tasks.SavePropertiesTask;
+import ro.ciubex.propeditor.util.Utilities;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -362,7 +363,7 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	private void doReboot() {
 		app.showProgressDialog(this, R.string.rebooting);
-		app.getUnixShell().runUnixCommand("reboot now");
+		Utilities.reboot(app);
 	}
 
 	/**

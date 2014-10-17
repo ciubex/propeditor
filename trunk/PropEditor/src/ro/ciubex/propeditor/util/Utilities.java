@@ -20,6 +20,8 @@ package ro.ciubex.propeditor.util;
 
 import java.io.File;
 
+import ro.ciubex.propeditor.PropEditorApplication;
+
 /**
  * Utilities class
  * 
@@ -55,5 +57,20 @@ public class Utilities {
 			result = string1.equals(string2);
 		}
 		return result;
+	}
+
+	/**
+	 * Method which invoke a method to reboot the phone.
+	 * 
+	 * @param app
+	 *            The application for the "old way" reboot.
+	 */
+	public static void reboot(PropEditorApplication app) {
+		String[] cmds = { "reboot now", "reboot recovery",
+				"toolbox reboot recovery", "busybox reboot recovery" };
+		for (String cmd : cmds) {
+			if (app.getUnixShell().runUnixCommand(cmd))
+				break;
+		}
 	}
 }
