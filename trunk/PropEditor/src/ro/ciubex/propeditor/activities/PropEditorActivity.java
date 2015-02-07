@@ -208,7 +208,8 @@ public class PropEditorActivity extends BaseActivity implements
 	 */
 	private void showItemDialogMenu(final int position) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.item_edit);
+		Entity entity = adapter.getItem(position);
+		builder.setTitle(getString(R.string.item_edit, entity.getKey()));
 		builder.setItems(R.array.menu_list,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {

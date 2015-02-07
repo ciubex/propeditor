@@ -20,10 +20,10 @@ package ro.ciubex.propeditor.activities;
 
 import ro.ciubex.propeditor.PropEditorApplication;
 import ro.ciubex.propeditor.R;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,7 +38,7 @@ import android.widget.TextView;
  * @author Claudiu Ciobotariu
  * 
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends ActionBarActivity {
 	protected PropEditorApplication app;
 	protected TextView title;
 	protected ImageView icon;
@@ -52,7 +52,7 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		app = (PropEditorApplication) getApplication();
-//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 	}
 
 	/**
