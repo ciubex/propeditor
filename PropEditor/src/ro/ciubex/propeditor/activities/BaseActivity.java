@@ -39,8 +39,8 @@ import android.widget.TextView;
  * 
  */
 public class BaseActivity extends ActionBarActivity {
-	protected PropEditorApplication app;
-	protected TextView title;
+	protected PropEditorApplication mApplication;
+	protected TextView mTitle;
 	protected ImageView icon;
 	protected int menuId;
 	private boolean showMenu;
@@ -50,9 +50,16 @@ public class BaseActivity extends ActionBarActivity {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		mApplication = (PropEditorApplication) getApplication();
+		applyApplicationTheme();
 		super.onCreate(savedInstanceState);
-		app = (PropEditorApplication) getApplication();
-		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+	}
+
+	/**
+	 * Apply application theme.
+	 */
+	protected void applyApplicationTheme() {
+		this.setTheme(mApplication.getApplicationTheme());
 	}
 
 	/**
@@ -99,7 +106,7 @@ public class BaseActivity extends ActionBarActivity {
 		if (showMenu) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(menuId, menu);
-			if (app.isProPresent()) {
+			if (mApplication.isProPresent()) {
 				MenuItem item_donate = menu.findItem(R.id.item_donate);
 				item_donate.setVisible(false);
 			}
@@ -139,14 +146,14 @@ public class BaseActivity extends ActionBarActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		app.hideProgressDialog();
+		mApplication.hideProgressDialog();
 	}
 
 	/**
 	 * Method invoked on exit
 	 */
 	protected void onExit() {
-		app.onClose();
+		mApplication.onClose();
 		finish();
 	}
 
@@ -163,7 +170,7 @@ public class BaseActivity extends ActionBarActivity {
 	private void applyCustomTitle() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.title_layout);
-		title = (TextView) findViewById(R.id.title);
+		mTitle = (TextView) findViewById(R.id.title);
 		icon = (ImageView) findViewById(R.id.icon);
 	}
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:icon="@drawable/ic_menu_settings"/>
     <item android:id="@+id/item_reload" android:title="@string/menu_item_reload" android:icon="@drawable/ic_menu_reload"/>
     <item android:id="@+id/item_save" android:title="@string/menu_item_save" android:icon="@drawable/ic_menu_save"/>
     <item android:id="@+id/item_add" android:title="@string/menu_item_add" android:icon="@drawable/ic_menu_add"/>

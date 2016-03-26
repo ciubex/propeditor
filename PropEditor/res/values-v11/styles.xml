@@ -1,11 +1,8 @@
 <resources>
 
-    <!--
-        Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
-        <!-- API 11 theme customizations can go here. -->
-    </style>
+    <!-- Application theme. -->
+    <style name="AppThemeDark" parent="Base.V7.Theme.AppCompat"/>
+
+    <style name="AppThemeLight" parent="Base.V7.Theme.AppCompat.Light"/>
 
 </resources>

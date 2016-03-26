@@ -24,6 +24,8 @@ import java.io.InputStream;
 import ro.ciubex.propeditor.R;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 /**
@@ -46,7 +48,6 @@ public class LicenseActivity extends BaseActivity {
 		setContentView(R.layout.license_layout);
 
 		licenseTextView = (TextView) findViewById(R.id.licenseTextView);
-		// licenseTextView.setMovementMethod(new ScrollingMovementMethod());
 	}
 
 	/**
@@ -56,8 +57,10 @@ public class LicenseActivity extends BaseActivity {
 	protected void onStart() {
 		super.onStart();
 		if (licenseText == null) {
-			licenseText = getStreamText("LICENSE.TXT");
+			licenseText = getStreamText("gpl-3.0-standalone.html");
 			licenseTextView.setText(licenseText);
+			licenseTextView.setMovementMethod(LinkMovementMethod.getInstance());
+			licenseTextView.setText(Html.fromHtml(licenseText));
 		}
 	}
 

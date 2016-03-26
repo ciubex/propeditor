@@ -27,7 +27,9 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,11 +42,16 @@ import android.widget.Toast;
  */
 public class PropEditorApplication extends Application {
 	private final String TAG = getClass().getName();
+	private static Context mContext;
 	private ProgressDialog progressDialog;
 	private Entities properties;
 	private String waitString;
 	private Locale defaultLocale;
 	private UnixCommands unixShell;
+	private SharedPreferences mSharedPreferences;
+	private boolean mMustRestart;
+
+	public static final String KEY_APP_THEME = "appTheme";
 
 	/**
 	 * This method is invoked when the application is created.
@@ -54,9 +61,15 @@ public class PropEditorApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		PropEditorApplication.mContext = getApplicationContext();
+		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		properties = new Entities();
 		waitString = getString(R.string.please_wait);
 		defaultLocale = Locale.getDefault();
+	}
+
+	public static Context getAppContext() {
+		return PropEditorApplication.mContext;
 	}
 
 	/**
@@ -256,5 +269,36 @@ public class PropEditorApplication extends Application {
 			Log.e(TAG, "isProPresent: " + e.getMessage(), e);
 		}
 		return success;
+	}
+
+	/**
+	 * Get the application theme.
+	 *
+	 * @return The application theme.
+	 */
+	public int getApplicationTheme() {
+		String theme = mSharedPreferences.getString(KEY_APP_THEME, "dark");
+		if ("dark".equals(theme)) {
+			return R.style.AppThemeDark;
+		}
+		return R.style.AppThemeLight;
+	}
+
+	/**
+	 * Set the must restart flag.
+	 *
+	 * @param mustRestart The value to be set.
+	 */
+	public void setMustRestart(boolean mustRestart) {
+		this.mMustRestart = mustRestart;
+	}
+
+	/**
+	 * Check the must restart flag state.
+	 *
+	 * @return The must restart flag state.
+	 */
+	public boolean isMustRestart() {
+		return mMustRestart;
 	}
 }

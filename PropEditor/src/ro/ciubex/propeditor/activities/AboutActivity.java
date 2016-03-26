@@ -69,7 +69,7 @@ public class AboutActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 		aboutText = getString(R.string.about_text, version);
-		if (app.isProPresent()) {
+		if (mApplication.isProPresent()) {
 			tytitle.setVisibility(TextView.VISIBLE);
 			tytext.setVisibility(TextView.VISIBLE);
 		}

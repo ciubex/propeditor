@@ -31,6 +31,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.File;
+
 /**
  * Show to the user a dialog to chose the folder where should be saved the
  * properties.
@@ -100,13 +102,13 @@ public class SaveToDialog extends BaseDialog implements
 	 * @return The external store path.
 	 */
 	private String getExternalStoragePath() {
-		String path = "/sdcard";
+		String path = Environment.getExternalStorageDirectory().getPath();
 		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			path = Environment.getExternalStorageDirectory().getAbsolutePath();
 		}
-		if (!path.endsWith("/")) {
-			path += "/";
+		if (!path.endsWith(File.separator)) {
+			path += File.separator;
 		}
 		return path;
 	}

@@ -151,8 +151,7 @@ public class LoadPropertiesTask extends
 				if (application.getUnixShell().hasRootAccess()) {
 					defaultResult.resultId = Constants.ERROR;
 					defaultResult.resultMessage = responder.getApplication()
-							.getString(R.string.unable_to_read, fileName,
-									"FileNotFoundException");
+							.getString(R.string.unable_to_read, fileName);
 				} else {
 					defaultResult.resultId = Constants.ERROR;
 					defaultResult.resultMessage = responder.getApplication()
