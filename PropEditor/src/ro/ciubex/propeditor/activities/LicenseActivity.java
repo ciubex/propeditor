@@ -58,7 +58,6 @@ public class LicenseActivity extends BaseActivity {
 		super.onStart();
 		if (licenseText == null) {
 			licenseText = getStreamText("gpl-3.0-standalone.html");
-			licenseTextView.setText(licenseText);
 			licenseTextView.setMovementMethod(LinkMovementMethod.getInstance());
 			licenseTextView.setText(Html.fromHtml(licenseText));
 		}

@@ -1,13 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:icon="@drawable/ic_menu_settings"/>
-    <item android:id="@+id/item_reload" android:title="@string/menu_item_reload" android:icon="@drawable/ic_menu_reload"/>
-    <item android:id="@+id/item_save" android:title="@string/menu_item_save" android:icon="@drawable/ic_menu_save"/>
-    <item android:id="@+id/item_add" android:title="@string/menu_item_add" android:icon="@drawable/ic_menu_add"/>
-    <item android:id="@+id/item_exit" android:title="@string/menu_item_exit" android:icon="@drawable/ic_menu_close_clear_cancel"/>
-    <item android:id="@+id/item_donate" android:title="@string/menu_item_donate" android:icon="@drawable/ic_menu_donate"/>
-    <item android:id="@+id/item_reboot" android:title="@string/menu_item_reboot" android:icon="@drawable/ic_menu_reboot"/>
-    <item android:id="@+id/item_save_to" android:title="@string/menu_item_save_to" android:icon="@drawable/ic_menu_save"/>
-    <item android:id="@+id/item_restore" android:title="@string/menu_item_restore" android:icon="@drawable/ic_menu_restore"/>
-    <item android:id="@+id/item_about" android:title="@string/menu_item_about" android:icon="@drawable/ic_menu_info_details"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/more"
+        android:icon="@android:drawable/ic_menu_more"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menu_settings"
+                android:icon="@drawable/ic_menu_settings"
+                app:showAsAction="never"
+                android:title="@string/menu_settings" />
+            <item
+                android:id="@+id/item_reload"
+                android:icon="@drawable/ic_menu_reload"
+                app:showAsAction="never"
+                android:title="@string/menu_item_reload" />
+            <item
+                android:id="@+id/item_save"
+                android:icon="@drawable/ic_menu_save"
+                app:showAsAction="never"
+                android:title="@string/menu_item_save" />
+            <item
+                android:id="@+id/item_add"
+                android:icon="@drawable/ic_menu_add"
+                app:showAsAction="never"
+                android:title="@string/menu_item_add" />
+            <item
+                android:id="@+id/item_exit"
+                android:icon="@drawable/ic_menu_close_clear_cancel"
+                app:showAsAction="never"
+                android:title="@string/menu_item_exit" />
+            <item
+                android:id="@+id/item_donate"
+                android:icon="@drawable/ic_menu_donate"
+                app:showAsAction="never"
+                android:title="@string/menu_item_donate" />
+            <item
+                android:id="@+id/item_reboot"
+                android:icon="@drawable/ic_menu_reboot"
+                app:showAsAction="never"
+                android:title="@string/menu_item_reboot" />
+            <item
+                android:id="@+id/item_save_to"
+                android:icon="@drawable/ic_menu_save"
+                app:showAsAction="never"
+                android:title="@string/menu_item_save_to" />
+            <item
+                android:id="@+id/item_restore"
+                android:icon="@drawable/ic_menu_restore"
+                app:showAsAction="never"
+                android:title="@string/menu_item_restore" />
+            <item
+                android:id="@+id/item_about"
+                android:icon="@drawable/ic_menu_info_details"
+                app:showAsAction="never"
+                android:title="@string/menu_item_about" />
+        </menu>
+    </item>
+
 </menu>
