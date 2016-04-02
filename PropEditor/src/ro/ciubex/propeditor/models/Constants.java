@@ -25,10 +25,11 @@ package ro.ciubex.propeditor.models;
  * 
  */
 public interface Constants {
-	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-	public static final int OK = 0;
-	public static final int ERROR = 1;
-	public static final String SYSTEM_PARTITION = "/system";
-	public static final String READ_WRITE = "rw";
-	public static final String READ_ONLY = "ro";
+	String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+	int OK = 0;
+	int ERROR = 1;
+	int ERROR_REPORT = 2;
+	String SYSTEM_PARTITION = "/system";
+	String READ_WRITE = "rw";
+	String READ_ONLY = "ro";
 }

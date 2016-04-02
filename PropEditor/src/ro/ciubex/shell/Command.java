@@ -96,7 +96,6 @@ public class Command {
 				try {
 					this.wait(10000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 				if (!finished) {
 					finished = true;

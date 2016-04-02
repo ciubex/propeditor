@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ro.ciubex.propeditor"
-    android:versionCode="28"
-    android:versionName="3.0.1" >
+    android:versionCode="29"
+    android:versionName="3.0.2" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -31,6 +31,16 @@
         <activity android:name="ro.ciubex.propeditor.activities.AboutActivity" android:label="@string/about"/>
         <activity android:name="ro.ciubex.propeditor.activities.LicenseActivity" android:label="@string/license"/>
         <activity android:name="ro.ciubex.propeditor.activities.SettingsActivity" android:label="@string/settings" />
+
+        <provider
+            android:name="ro.ciubex.propeditor.provider.CachedFileProvider"
+            android:authorities="ro.ciubex.propeditor.provider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider" />
+        </provider>
     </application>
 
 </manifest>

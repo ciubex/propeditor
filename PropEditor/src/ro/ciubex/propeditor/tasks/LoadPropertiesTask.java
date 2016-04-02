@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,16 +39,17 @@ import android.os.AsyncTask;
  */
 public class LoadPropertiesTask extends
 		AsyncTask<Void, Void, DefaultAsyncTaskResult> {
+	private static final String TAG = LoadPropertiesTask.class.getName();
 
 	/**
 	 * Responder used on loading process.
 	 */
 	public interface Responder {
-		public Application getApplication();
+		Application getApplication();
 
-		public void startLoadProperties();
+		void startLoadProperties();
 
-		public void endLoadProperties(DefaultAsyncTaskResult result);
+		void endLoadProperties(DefaultAsyncTaskResult result);
 	}
 
 	private Responder responder;
@@ -126,24 +127,29 @@ public class LoadPropertiesTask extends
 					defaultResult.resultMessage = responder.getApplication()
 							.getString(R.string.properties_loaded,
 									properties.size());
+				} catch (IllegalArgumentException e) {
+					defaultResult.resultId = Constants.ERROR_REPORT;
+					defaultResult.resultMessage = responder.getApplication()
+							.getString(R.string.loading_exception_report, fileName,
+									"IllegalArgumentException: ", e.getMessage());
+					application.logE(TAG, defaultResult.resultMessage, e);
 				} catch (FileNotFoundException e) {
 					defaultResult.resultId = Constants.ERROR;
 					defaultResult.resultMessage = responder.getApplication()
 							.getString(R.string.loading_exception, fileName,
 									"FileNotFoundException", e.getMessage());
-					e.printStackTrace();
+					application.logE(TAG, defaultResult.resultMessage, e);
 				} catch (IOException e) {
 					defaultResult.resultId = Constants.ERROR;
 					defaultResult.resultMessage = responder.getApplication()
 							.getString(R.string.loading_exception, fileName,
 									"IOException", e.getMessage());
-					e.printStackTrace();
+					application.logE(TAG, defaultResult.resultMessage, e);
 				} finally {
 					if (inputStream != null) {
 						try {
 							inputStream.close();
 						} catch (IOException e) {
-							/* ignored */
 						}
 					}
 				}
@@ -152,16 +158,19 @@ public class LoadPropertiesTask extends
 					defaultResult.resultId = Constants.ERROR;
 					defaultResult.resultMessage = responder.getApplication()
 							.getString(R.string.unable_to_read, fileName);
+					application.logE(TAG, defaultResult.resultMessage);
 				} else {
 					defaultResult.resultId = Constants.ERROR;
 					defaultResult.resultMessage = responder.getApplication()
 							.getString(R.string.no_root_privilages);
+					application.logE(TAG, defaultResult.resultMessage);
 				}
 			}
 		} else {
 			defaultResult.resultId = Constants.ERROR;
 			defaultResult.resultMessage = responder.getApplication().getString(
 					R.string.file_not_exist, fileName);
+			application.logE(TAG, defaultResult.resultMessage);
 		}
 	}
 
@@ -172,7 +181,7 @@ public class LoadPropertiesTask extends
 	 */
 	private File prepareOriginalFile() {
 		File destFile = new File(privateDir + File.separator + "tmp"
-				+ File.separator + "build.prop");
+				+ File.separator + PropEditorApplication.BUILD_PROP);
 		if (destFile.exists()) {
 			destFile.delete();
 		} else {

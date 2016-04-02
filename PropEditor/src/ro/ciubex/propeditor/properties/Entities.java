@@ -419,7 +419,8 @@ public class Entities implements Cloneable {
 							break;
 						default:
 							throw new IllegalArgumentException(
-									"Malformed \\uxxxx encoding.");
+									"Malformed \\uxxxx encoding for character: \"" + aChar +
+											"\", out: \"" + out + "\"");
 						}
 					}
 					out[outLen++] = (char) value;

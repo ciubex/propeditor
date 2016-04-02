@@ -89,7 +89,8 @@
     <string name="restore_confirmation">Are you sure to restore your build.prop file?\nBy restoring the file you will lose all modifications.</string>
     <string name="file_restored">The file: %s successfully restored!</string>
     <string name="restore_file_failed">Restoring old file failed!</string>
-    
+
+    <string name="loading_exception_report">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s\nDo you want to send a report using your email default application?</string>
     <string name="loading_exception">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s</string>
     <string name="saving_exception">Exception ocured during saving: %1$s\nException: %2$s\nMessage: %3$s</string>
     <string name="backup_failed">Backing up the old file was failed!</string>
@@ -117,6 +118,12 @@
     <string name="donate_url"><Data><![CDATA[https://play.google.com/store/apps/details?id=ro.ciubex.propeditorpro]]></Data></string>
     <string name="thank_you_title">Thank you for donation!</string>
     <string name="thank_you_desc">Thank you for the appreciation of my work, buying pro application.</string>
+
+    <!-- Report -->
+    <string name="send_error_report_title">PropEditor error report</string>
+    <string name="send_error_report">Send error report</string>
+    <string name="report_body">Description: </string>
+    <string name="send_report">Send report&#8230;</string>
     
     <!-- About -->
     <string name="about">About</string>

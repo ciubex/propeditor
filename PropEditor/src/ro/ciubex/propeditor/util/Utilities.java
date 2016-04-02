@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,9 @@
  */
 package ro.ciubex.propeditor.util;
 
+import android.util.Log;
+
+import java.io.Closeable;
 import java.io.File;
 
 import ro.ciubex.propeditor.PropEditorApplication;
@@ -29,6 +32,7 @@ import ro.ciubex.propeditor.PropEditorApplication;
  * 
  */
 public class Utilities {
+	private static final String TAG = Utilities.class.getName();
 
 	/**
 	 * Check if the file exist.
@@ -71,6 +75,25 @@ public class Utilities {
 		for (String cmd : cmds) {
 			if (app.getUnixShell().runUnixCommand(cmd))
 				break;
+		}
+	}
+
+
+
+	/**
+	 * Close a closeable object.
+	 *
+	 * @param closeable Object to be close.
+	 */
+	public static void doClose(Object closeable) {
+		if (closeable instanceof Closeable) {
+			try {
+				((Closeable) closeable).close();
+			} catch (RuntimeException rethrown) {
+				throw rethrown;
+			} catch (Exception e) {
+				Log.e(TAG, "doClose Exception: " + e.getMessage(), e);
+			}
 		}
 	}
 }

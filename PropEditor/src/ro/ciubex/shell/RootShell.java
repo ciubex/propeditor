@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class RootShell implements Closeable {
 	 * The class constructor used to initialize the root shell.
 	 */
 	public RootShell() {
-		commands = new ArrayList<Command>();
+		commands = new ArrayList<>();
 		scanForSU();
 		initializeRootProcess();
 	}
@@ -94,7 +94,6 @@ public class RootShell implements Closeable {
 				startRootProcess();
 			} catch (IOException e) {
 				rootAccess = false;
-				e.printStackTrace();
 			}
 		}
 	}
@@ -111,7 +110,6 @@ public class RootShell implements Closeable {
 			rootProcess = Runtime.getRuntime().exec(suPath);
 		} catch (IOException e) {
 			rootAccess = false;
-			e.printStackTrace();
 		}
 		if (rootAccess) {
 			consoleOut = new BufferedReader(new InputStreamReader(
@@ -148,9 +146,7 @@ public class RootShell implements Closeable {
 			try {
 				writeCommands();
 			} catch (IOException e) {
-				e.printStackTrace();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 	};
@@ -160,9 +156,7 @@ public class RootShell implements Closeable {
 			try {
 				readOutput();
 			} catch (IOException e) {
-				e.printStackTrace();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 	};
@@ -191,7 +185,6 @@ public class RootShell implements Closeable {
 			try {
 				closeable.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}

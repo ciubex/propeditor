@@ -39,16 +39,17 @@ import android.os.AsyncTask;
  */
 public class SavePropertiesTask extends
 		AsyncTask<Void, Void, DefaultAsyncTaskResult> {
+	private static final String TAG = LoadPropertiesTask.class.getName();
 
 	/**
 	 * Responder used on save process.
 	 */
 	public interface Responder {
-		public Application getApplication();
+		Application getApplication();
 
-		public void startSaveProperties();
+		void startSaveProperties();
 
-		public void endSaveProperties(DefaultAsyncTaskResult result);
+		void endSaveProperties(DefaultAsyncTaskResult result);
 	}
 
 	private Responder responder;
@@ -95,9 +96,9 @@ public class SavePropertiesTask extends
 		}
 		if (continueSave) {
 			if (isSystem) {
-				shouldMountSystem = application.getUnixShell()
+				shouldMountSystem = !application.getUnixShell()
 						.checkPartitionMountFlags(Constants.SYSTEM_PARTITION,
-				Constants.READ_WRITE) != true;
+				Constants.READ_WRITE);
 			}
 			if (shouldMountSystem) {
 				continueSave = application.getUnixShell().mountPartition(
@@ -162,7 +163,7 @@ public class SavePropertiesTask extends
 			defaultResult.resultMessage = application.getString(
 					R.string.saving_exception, fileName, "IOException",
 					e.getMessage());
-			e.printStackTrace();
+			application.logE(TAG, defaultResult.resultMessage, e);
 		} finally {
 			if (writer != null) {
 				try {

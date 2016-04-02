@@ -89,7 +89,6 @@ public class LicenseActivity extends BaseActivity {
 				try {
 					in.close();
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		}

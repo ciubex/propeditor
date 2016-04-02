@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import ro.ciubex.propeditor.PropEditorApplication;
 import ro.ciubex.propeditor.R;
 import ro.ciubex.propeditor.dialogs.EditorDialog;
 import ro.ciubex.propeditor.dialogs.SaveToDialog;
@@ -30,7 +31,6 @@ public class PropEditorActivity extends BaseActivity implements
         LoadPropertiesTask.Responder, SavePropertiesTask.Responder,
         RestorePropertiesTask.Responder {
 
-    private final String BUILD_PROP = "/system/build.prop";
     private PropertiesListAdapter adapter;
     private EditText filterBox;
     private ListView propertiesList = null;
@@ -40,7 +40,9 @@ public class PropEditorActivity extends BaseActivity implements
     private static final int CONFIRM_ID_RELOAD = 2;
     private static final int CONFIRM_ID_DONATE = 3;
     private static final int CONFIRM_ID_REBOOT = 4;
+    private static final int CONFIRM_ID_ERROR_REPORT = 5;
     private static final int REQUEST_CODE_SETTINGS = 0;
+    private static final int REQUEST_SEND_REPORT = 1;
 
     /**
      * The method invoked when the activity is creating
@@ -114,7 +116,8 @@ public class PropEditorActivity extends BaseActivity implements
     }
 
     private void loadPropertiesList() {
-        new LoadPropertiesTask(this, BUILD_PROP, mApplication.getEntities()).execute();
+        new LoadPropertiesTask(this, PropEditorApplication.BUILD_PROP_PATH,
+                mApplication.getEntities()).execute();
     }
 
     /**
@@ -188,6 +191,10 @@ public class PropEditorActivity extends BaseActivity implements
         mApplication.hideProgressDialog();
         if (Constants.OK == result.resultId) {
             mApplication.showMessageInfo(this, result.resultMessage);
+        } else if (Constants.ERROR_REPORT == result.resultId) {
+            showConfirmationDialog(
+                    R.string.remove_property,
+                    result.resultMessage, CONFIRM_ID_ERROR_REPORT, null);
         } else {
             mApplication.showMessageError(this, result.resultMessage);
         }
@@ -291,7 +298,7 @@ public class PropEditorActivity extends BaseActivity implements
                 doDeleteEntity(anObject);
                 break;
             case CONFIRM_ID_RESTORE:
-                new RestorePropertiesTask(this, BUILD_PROP).execute();
+                new RestorePropertiesTask(this, PropEditorApplication.BUILD_PROP_PATH).execute();
                 break;
             case CONFIRM_ID_DONATE:
                 startBrowserWithPage(R.string.donate_url);
@@ -301,6 +308,9 @@ public class PropEditorActivity extends BaseActivity implements
                 break;
             case CONFIRM_ID_REBOOT:
                 doReboot();
+                break;
+            case CONFIRM_ID_ERROR_REPORT:
+                doErrorReport();
                 break;
         }
     }
@@ -395,7 +405,7 @@ public class PropEditorActivity extends BaseActivity implements
      * Invoked when is chose the Save menu item.
      */
     private void onMenuItemSave() {
-        new SavePropertiesTask(this, BUILD_PROP, mApplication.getEntities()).execute();
+        new SavePropertiesTask(this, PropEditorApplication.BUILD_PROP_PATH, mApplication.getEntities()).execute();
     }
 
     /**
@@ -480,5 +490,13 @@ public class PropEditorActivity extends BaseActivity implements
         finish();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    /**
+     * Send email
+     */
+    private void doErrorReport() {
+        mApplication.doSendReport(this, REQUEST_SEND_REPORT,
+                PropEditorApplication.getAppContext().getString(R.string.send_error_report_title));
     }
 }

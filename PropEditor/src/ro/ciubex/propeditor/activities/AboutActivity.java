@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,6 @@ public class AboutActivity extends BaseActivity {
 			version = this.getPackageManager().getPackageInfo(
 					this.getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
 		}
 		aboutText = getString(R.string.about_text, version);
 		if (mApplication.isProPresent()) {

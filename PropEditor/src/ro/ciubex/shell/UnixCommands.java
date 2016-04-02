@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,15 +63,12 @@ public class UnixCommands {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		} finally {
 			if (lnr != null) {
 				try {
 					lnr.close();
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		}
@@ -191,7 +188,6 @@ public class UnixCommands {
 		try {
 			rootShell.close();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
