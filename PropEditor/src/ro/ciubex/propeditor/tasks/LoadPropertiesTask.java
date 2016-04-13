@@ -75,7 +75,8 @@ public class LoadPropertiesTask extends
 		this.fileName = fileName;
 		this.properties = properties;
 		application = (PropEditorApplication) responder.getApplication();
-		privateDir = application.getFilesDir().getAbsolutePath();
+		privateDir = application.getFilesDir() != null ?
+				application.getFilesDir().getAbsolutePath() : null;
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class LoadPropertiesTask extends
 		File f = new File(fileName);
 		if (f.exists() && f.isFile()) {
 			if (!f.canRead()) {
-				if (application.getUnixShell().hasRootAccess()) {
+				if (application.getUnixShell().hasRootAccess() && privateDir != null) {
 					f = prepareOriginalFile();
 				}
 			}

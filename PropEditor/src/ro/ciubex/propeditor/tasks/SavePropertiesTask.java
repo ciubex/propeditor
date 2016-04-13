@@ -66,7 +66,8 @@ public class SavePropertiesTask extends
 		this.fileName = fileName;
 		destinationFile = new File(fileName);
 		this.properties = properties;
-		privateDir = responder.getApplication().getFilesDir().getAbsolutePath();
+		privateDir = responder.getApplication().getFilesDir() != null ?
+				responder.getApplication().getFilesDir().getAbsolutePath() : null;
 		application = (PropEditorApplication) responder.getApplication();
 	}
 
@@ -111,8 +112,10 @@ public class SavePropertiesTask extends
 			}
 		}
 		if (continueSave) {
-			saveTheProperties();
-			if (backupOldFile()) {
+			if (privateDir != null) {
+				saveTheProperties();
+			}
+			if (privateDir != null && backupOldFile()) {
 				moveNewFile();
 			} else {
 				defaultResult.resultId = Constants.ERROR;
