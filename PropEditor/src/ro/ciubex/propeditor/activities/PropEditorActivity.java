@@ -1,3 +1,21 @@
+/**
+ * This file is part of PropEditor application.
+ *
+ * Copyright (C) 2016 Claudiu Ciobotariu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ro.ciubex.propeditor.activities;
 
 import android.app.AlertDialog;
@@ -27,6 +45,9 @@ import ro.ciubex.propeditor.tasks.RestorePropertiesTask;
 import ro.ciubex.propeditor.tasks.SavePropertiesTask;
 import ro.ciubex.propeditor.util.Utilities;
 
+/**
+ * Main activity class.
+ */
 public class PropEditorActivity extends BaseActivity implements
         LoadPropertiesTask.Responder, SavePropertiesTask.Responder,
         RestorePropertiesTask.Responder {
@@ -43,6 +64,8 @@ public class PropEditorActivity extends BaseActivity implements
     private static final int CONFIRM_ID_ERROR_REPORT = 5;
     private static final int REQUEST_CODE_SETTINGS = 0;
     private static final int REQUEST_SEND_REPORT = 1;
+
+    private EditorDialog mEditorDialog;
 
     /**
      * The method invoked when the activity is creating
@@ -115,9 +138,27 @@ public class PropEditorActivity extends BaseActivity implements
         }
     }
 
+    /**
+     * Load properties list, invoke the thread.
+     */
     private void loadPropertiesList() {
         new LoadPropertiesTask(this, PropEditorApplication.BUILD_PROP_PATH,
                 mApplication.getEntities()).execute();
+    }
+
+    @Override
+    protected void onPause() {
+        destroyEditorDialog();
+        super.onPause();
+    }
+
+    /**
+     * Destroy the editor dialog.
+     */
+    private void destroyEditorDialog() {
+        if (mEditorDialog != null && mEditorDialog.isShowing()) {
+            mEditorDialog.dismiss();
+        }
     }
 
     /**
@@ -193,7 +234,7 @@ public class PropEditorActivity extends BaseActivity implements
             mApplication.showMessageInfo(this, result.resultMessage);
         } else if (Constants.ERROR_REPORT == result.resultId) {
             showConfirmationDialog(
-                    R.string.remove_property,
+                    R.string.send_error_report_title,
                     result.resultMessage, CONFIRM_ID_ERROR_REPORT, null);
         } else {
             mApplication.showMessageError(this, result.resultMessage);
@@ -235,7 +276,8 @@ public class PropEditorActivity extends BaseActivity implements
                         }
                     }
                 });
-        builder.create().show();
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
     }
 
     /**
@@ -243,8 +285,8 @@ public class PropEditorActivity extends BaseActivity implements
      * new property.
      */
     private void onMenuItemAdd() {
-        new EditorDialog(this, mApplication.getEntities(), null, R.string.add_property)
-                .show();
+        mEditorDialog = new EditorDialog(this, mApplication.getEntities(), null, R.string.add_property);
+        mEditorDialog.show();
     }
 
     /**
@@ -254,8 +296,9 @@ public class PropEditorActivity extends BaseActivity implements
      */
     private void onMenuItemEdit(int position) {
         Entity entity = adapter.getItem(position);
-        new EditorDialog(this, mApplication.getEntities(), entity,
-                R.string.edit_property).show();
+        mEditorDialog = new EditorDialog(this, mApplication.getEntities(), entity,
+                R.string.edit_property);
+        mEditorDialog.show();
     }
 
     /**
@@ -352,7 +395,7 @@ public class PropEditorActivity extends BaseActivity implements
                     mApplication.getString(R.string.reboot_confirmation),
                     CONFIRM_ID_REBOOT, null);
         } else {
-            mApplication.showMessageError(this, R.string.no_root_privilages);
+            mApplication.showMessageError(this, R.string.no_root_privileges);
         }
     }
 
@@ -497,6 +540,6 @@ public class PropEditorActivity extends BaseActivity implements
      */
     private void doErrorReport() {
         mApplication.doSendReport(this, REQUEST_SEND_REPORT,
-                PropEditorApplication.getAppContext().getString(R.string.send_error_report_title));
+                mApplication.getApplicationContext().getString(R.string.send_error_report_title));
     }
 }

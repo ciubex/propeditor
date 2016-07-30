@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ public class LicenseActivity extends BaseActivity {
 		setContentView(R.layout.license_layout);
 
 		licenseTextView = (TextView) findViewById(R.id.licenseTextView);
+		setMenuId(R.menu.back_only_menu);
 	}
 
 	/**
@@ -61,6 +62,21 @@ public class LicenseActivity extends BaseActivity {
 			licenseTextView.setMovementMethod(LinkMovementMethod.getInstance());
 			licenseTextView.setText(Html.fromHtml(licenseText));
 		}
+	}
+
+	/**
+	 * Prepare Option menu
+	 */
+	@Override
+	protected boolean onMenuItemSelected(int menuItemId) {
+		boolean processed = false;
+		switch (menuItemId) {
+			case R.id.item_back:
+				processed = true;
+				goBack();
+				break;
+		}
+		return processed;
 	}
 
 	/**

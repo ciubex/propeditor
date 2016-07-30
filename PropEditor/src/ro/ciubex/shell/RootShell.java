@@ -38,7 +38,7 @@ import java.util.List;
 public class RootShell implements Closeable {
 	boolean rootAccess;
 	boolean closing;
-	private String suPath;
+	private String mSuPath;
 	private Process rootProcess;
 	private BufferedReader consoleOut;
 	private DataOutputStream consoleIn;
@@ -48,7 +48,7 @@ public class RootShell implements Closeable {
 	/**
 	 * The class constructor used to initialize the root shell.
 	 */
-	public RootShell() {
+	public RootShell(String suPath) {
 		commands = new ArrayList<>();
 		scanForSU();
 		initializeRootProcess();
@@ -64,23 +64,31 @@ public class RootShell implements Closeable {
 	}
 
 	/**
-	 * Places where could be placed the SU binnary.
+	 * Places where could be placed the SU binary.
 	 */
-	static final String[] binPlaces = { "/data/bin/", "/system/bin/",
-			"/system/xbin/", "/sbin/", "/data/local/xbin/", "/data/local/bin/",
-			"/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/" };
+	static final String[] binPlaces = { "/data/bin/su", "/system/bin/su",
+			"/system/xbin/su", "/sbin/su", "/data/local/xbin/su", "/data/local/bin/su",
+			"/system/sd/xbin/su", "/system/bin/failsafe/su", "/data/local/su", "/su/bin/su",
+			"/su/xbin/su"
+	};
 
 	/**
 	 * Method used at initialization to find the path for SU
 	 */
 	private void scanForSU() {
 		File su;
-		for (String path : binPlaces) {
-			su = new File(path + "su");
-			if (su.exists()) {
-				rootAccess = true;
-				suPath = su.getAbsolutePath();
-				break;
+		if (mSuPath != null && mSuPath.length() > 0) {
+			su = new File(mSuPath);
+			rootAccess = su.exists();
+		}
+		if (!rootAccess) { // the su path is not set
+			for (String path : binPlaces) {
+				su = new File(path);
+				if (su.exists()) {
+					rootAccess = true;
+					mSuPath = su.getAbsolutePath();
+					break;
+				}
 			}
 		}
 	}
@@ -107,7 +115,7 @@ public class RootShell implements Closeable {
 		String line;
 		boolean isOk = false;
 		try {
-			rootProcess = Runtime.getRuntime().exec(suPath);
+			rootProcess = Runtime.getRuntime().exec(mSuPath);
 		} catch (IOException e) {
 			rootAccess = false;
 		}
@@ -303,4 +311,15 @@ public class RootShell implements Closeable {
 		}
 	}
 
+	/**
+	 * Get the SU path or empty string.
+	 *
+	 * @return The SU path or empty string.
+	 */
+	public String getSuPath() {
+		if (rootAccess) {
+			return mSuPath;
+		}
+		return "";
+	}
 }

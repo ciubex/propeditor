@@ -1,18 +1,18 @@
 /**
  * This file is part of PropEditor application.
- * <p/>
+ *
  * Copyright (C) 2016 Claudiu Ciobotariu
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
@@ -36,6 +37,8 @@ import ro.ciubex.propeditor.R;
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private PropEditorApplication mApplication;
     private Preference mAppTheme;
+    private EditTextPreference mSuPath;
+    private AlertDialog mAlertDialog;
 
     /**
      * Method called when this preference activity is created
@@ -54,6 +57,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     private void prepareUI() {
         mAppTheme = findPreference(PropEditorApplication.KEY_APP_THEME);
+        mSuPath = (EditTextPreference)findPreference(PropEditorApplication.KEY_SU_PATH);
     }
 
     /**
@@ -82,11 +86,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+        mApplication.destroyAlertDialog(mAlertDialog);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (PropEditorApplication.KEY_APP_THEME.equals(key)) {
+            showRestartActivityMessage();
+            prepareSummaries();
+        } else if (PropEditorApplication.KEY_SU_PATH.equals(key)) {
             showRestartActivityMessage();
             prepareSummaries();
         }
@@ -96,7 +104,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Show to the user an alert message.
      */
     private void showRestartActivityMessage() {
-        new AlertDialog.Builder(this)
+        mAlertDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.app_name)
                 .setMessage(R.string.must_restart_application)
                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -121,9 +129,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Prepare preferences summaries
      */
     private void prepareSummaries() {
-        String label = PropEditorApplication.getAppContext().getString(R.string.app_theme_title_param,
+        String label = mApplication.getApplicationContext().getString(R.string.app_theme_title_param,
                 getSelectedThemeLabel());
         mAppTheme.setTitle(label);
+        label = mApplication.getSuPath();
+        if (label.length() > 0) {
+            label = mApplication.getApplicationContext().getString(R.string.su_path_desc_param, label);
+            mSuPath.setSummary(label);
+        } else {
+            mSuPath.setSummary(R.string.su_path_desc);
+        }
     }
 
     /**
@@ -132,7 +147,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * @return The application theme label.
      */
     private String getSelectedThemeLabel() {
-        String[] labels = PropEditorApplication.getAppContext().getResources().
+        String[] labels = mApplication.getApplicationContext().getResources().
                 getStringArray(R.array.app_theme_labels);
         int themeId = mApplication.getApplicationTheme();
         if (R.style.AppThemeDark == themeId) {

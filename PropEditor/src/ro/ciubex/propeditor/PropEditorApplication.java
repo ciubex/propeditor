@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ import java.util.zip.ZipOutputStream;
 import ro.ciubex.propeditor.properties.Entities;
 import ro.ciubex.propeditor.provider.CachedFileProvider;
 import ro.ciubex.propeditor.tasks.LogThread;
-import ro.ciubex.propeditor.util.Devices;
+import ro.ciubex.propeditor.util.DevicesUtils;
 import ro.ciubex.propeditor.util.Utilities;
 import ro.ciubex.shell.UnixCommands;
 import android.app.AlertDialog;
@@ -66,12 +66,11 @@ import android.widget.Toast;
  */
 public class PropEditorApplication extends Application {
 	private final String TAG = getClass().getName();
-	private static Context mContext;
-	private ProgressDialog progressDialog;
-	private Entities properties;
-	private String waitString;
-	private Locale defaultLocale;
-	private UnixCommands unixShell;
+	private ProgressDialog mProgressDialog;
+	private Entities mProperties;
+	private String mWaitString;
+	private Locale mDefaultLocale;
+	private UnixCommands mUnixShell;
 	private SharedPreferences mSharedPreferences;
 	private boolean mMustRestart;
 
@@ -85,12 +84,15 @@ public class PropEditorApplication extends Application {
 	public static final String LOGS_FOLDER_NAME = "logs";
 	public static final String LOG_FILE_NAME = "PropEditor_logs.log";
 	private File mLogsFolder;
-	private static File logFile;
-	private static LogThread logFileThread;
-	private static SimpleDateFormat sFormatter;
+	private static File mLogFile;
+	private static LogThread mLogFileThread;
+	private static SimpleDateFormat mSimpleDateFormat;
 
 	public static final String KEY_APP_THEME = "appTheme";
+	public static final String KEY_SU_PATH = "suPath";
 	private static final int BUFFER = 1024;
+
+	private AlertDialog mAlertDialog;
 
 	/**
 	 * This method is invoked when the application is created.
@@ -100,16 +102,11 @@ public class PropEditorApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		PropEditorApplication.mContext = getApplicationContext();
 		mSdkInt = android.os.Build.VERSION.SDK_INT;
 		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		properties = new Entities();
-		waitString = getString(R.string.please_wait);
-		defaultLocale = Locale.getDefault();
-	}
-
-	public static Context getAppContext() {
-		return PropEditorApplication.mContext;
+		mProperties = new Entities();
+		mWaitString = getString(R.string.please_wait);
+		mDefaultLocale = Locale.getDefault();
 	}
 
 	/**
@@ -127,19 +124,40 @@ public class PropEditorApplication extends Application {
 	 * @return Unix shell.
 	 */
 	public UnixCommands getUnixShell() {
-		if (unixShell == null) {
-			unixShell = new UnixCommands();
+		if (mUnixShell == null) {
+			mUnixShell = new UnixCommands(getSuPath());
 		}
-		return unixShell;
+		return mUnixShell;
+	}
+
+	/**
+	 * Get the super user binary path.
+	 *
+	 * @return The super user binary path.
+	 */
+	public String getSuPath() {
+		return mSharedPreferences.getString(KEY_SU_PATH, "");
 	}
 
 	/**
 	 * Method used when the application should be closed.
 	 */
 	public void onClose() {
+		saveSuPath();
 		hideProgressDialog();
-		if (unixShell != null) {
-			unixShell.closeShell();
+		destroyAlertDialog(mAlertDialog);
+		if (mUnixShell != null) {
+			mUnixShell.closeShell();
+		}
+	}
+
+	/**
+	 * Save SU path, if any.
+	 */
+	private void saveSuPath() {
+		if (mUnixShell != null) {
+			String suPath = mUnixShell.getSuPath();
+			saveStringValue(KEY_SU_PATH, suPath);
 		}
 	}
 
@@ -167,17 +185,32 @@ public class PropEditorApplication extends Application {
 	 */
 	public void showProgressDialog(Context context, String message) {
 		hideProgressDialog();
-		progressDialog = ProgressDialog.show(context, waitString, message);
+		mProgressDialog = ProgressDialog.show(context, mWaitString, message);
 	}
 
 	/**
 	 * Method used to hide the progress dialog.
 	 */
 	public void hideProgressDialog() {
-		if (progressDialog != null) {
-			progressDialog.dismiss();
+		if (mProgressDialog != null) {
+			mProgressDialog.dismiss();
 		}
-		progressDialog = null;
+		mProgressDialog = null;
+	}
+
+	/**
+	 * Destroy alert dialog.
+	 */
+	public void destroyAlertDialog(AlertDialog alertDialog) {
+		if (alertDialog != null) {
+			try {
+				if (alertDialog.isShowing()) {
+					alertDialog.dismiss();
+				}
+			} catch (Exception e) {
+			}
+			alertDialog = null;
+		}
 	}
 
 	/**
@@ -264,7 +297,7 @@ public class PropEditorApplication extends Application {
 	public void showMessageError(Context context, String message) {
 		if (message != null && message.length() > 0) {
 			try {
-				new AlertDialog.Builder(context)
+				mAlertDialog = new AlertDialog.Builder(context)
 						.setTitle(R.string.error_occurred)
 						.setMessage(message)
 						.setIcon(android.R.drawable.ic_dialog_alert)
@@ -290,7 +323,7 @@ public class PropEditorApplication extends Application {
 	 * @return Default locale used on application
 	 */
 	public Locale getDefaultLocale() {
-		return defaultLocale;
+		return mDefaultLocale;
 	}
 
 	/**
@@ -299,7 +332,7 @@ public class PropEditorApplication extends Application {
 	 * @return Loaded properties.
 	 */
 	public Entities getEntities() {
-		return properties;
+		return mProperties;
 	}
 
 	/**
@@ -411,7 +444,7 @@ public class PropEditorApplication extends Application {
 	 */
 	private void writeLogFile(long milliseconds, String logmessage) {
 		if (checkLogFileThread()) {
-			logFileThread.addLog(sFormatter.format(new Date(milliseconds))
+			mLogFileThread.addLog(mSimpleDateFormat.format(new Date(milliseconds))
 					+ "\t" + logmessage);
 		}
 	}
@@ -420,18 +453,18 @@ public class PropEditorApplication extends Application {
 	 * Check if log file thread exist and create it if not.
 	 */
 	private boolean checkLogFileThread() {
-		if (logFileThread == null) {
+		if (mLogFileThread == null) {
 			try {
-				logFile = new File(getLogsFolder(), PropEditorApplication.LOG_FILE_NAME);
-				logFileThread = new LogThread(logFile);
-				sFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
-				sFormatter.setTimeZone(TimeZone.getDefault());
-				new Thread(logFileThread).start();
+				mLogFile = new File(getLogsFolder(), PropEditorApplication.LOG_FILE_NAME);
+				mLogFileThread = new LogThread(mLogFile);
+				mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
+				mSimpleDateFormat.setTimeZone(TimeZone.getDefault());
+				new Thread(mLogFileThread).start();
 			} catch (Exception e) {
 				logE(TAG, "Exception: " + e.getMessage(), e);
 			}
 		}
-		return logFileThread != null;
+		return mLogFileThread != null;
 	}
 
 	/**
@@ -440,17 +473,17 @@ public class PropEditorApplication extends Application {
 	 * @return The log file.
 	 */
 	public File getLogFile() {
-		return logFile;
+		return mLogFile;
 	}
 
 	/**
 	 * Remove log file from disk.
 	 */
 	public void deleteLogFile() {
-		if (logFile != null && logFile.exists()) {
+		if (mLogFile != null && mLogFile.exists()) {
 			try {
-				logFileThread.close();
-				while (!logFileThread.isClosed()) {
+				mLogFileThread.close();
+				while (!mLogFileThread.isClosed()) {
 					Thread.sleep(1000);
 				}
 			} catch (IOException e) {
@@ -458,8 +491,8 @@ public class PropEditorApplication extends Application {
 			} catch (InterruptedException e) {
 				Log.e(TAG, "deleteLogFile: " + e.getMessage(), e);
 			}
-			logFileThread = null;
-			logFile.delete();
+			mLogFileThread = null;
+			mLogFile.delete();
 		}
 	}
 
@@ -501,7 +534,7 @@ public class PropEditorApplication extends Application {
 	public void doSendReport(FragmentActivity activity, int requestCode,
 									 String emailTitle) {
 		showProgressDialog(activity, R.string.send_report);
-		String message = getAppContext().getString(R.string.report_body);
+		String message = getApplicationContext().getString(R.string.report_body);
 		File logsFolder = getLogsFolder();
 		File archive = getLogArchive(logsFolder);
 		String[] TO = {"ciubex@yahoo.com"};
@@ -524,7 +557,7 @@ public class PropEditorApplication extends Application {
 		hideProgressDialog();
 		try {
 			activity.startActivityForResult(Intent.createChooser(emailIntent,
-					getAppContext().getString(R.string.send_report)), requestCode);
+					getApplicationContext().getString(R.string.send_report)), requestCode);
 		} catch (ActivityNotFoundException ex) {
 			logE(TAG,
 					"confirmedSendReport Exception: " + ex.getMessage(), ex);
@@ -624,7 +657,7 @@ public class PropEditorApplication extends Application {
 			writer.write("Android version: " + Build.VERSION.SDK_INT +
 					" (" + Build.VERSION.CODENAME + ")" + LS);
 			writer.write("Device: " + model + LS);
-			writer.write("Device name: " + Devices.getDeviceName() + LS);
+			writer.write("Device name: " + DevicesUtils.getDeviceName(getAssets()) + LS);
 			writer.write("App version: " + getVersionName() +
 					" (" + getVersionCode() + ")" + LS);
 			int n;
@@ -650,5 +683,17 @@ public class PropEditorApplication extends Application {
 			}
 		}
 		return logFile;
+	}
+
+	/**
+	 * Store a string value on the shared preferences.
+	 *
+	 * @param key   The shared preference key.
+	 * @param value The string value to be saved.
+	 */
+	private void saveStringValue(String key, String value) {
+		SharedPreferences.Editor editor = mSharedPreferences.edit();
+		editor.putString(key, value);
+		editor.commit();
 	}
 }

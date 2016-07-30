@@ -1,7 +1,7 @@
 /**
  * This file is part of PropEditor application.
  * 
- * Copyright (C) 2013 Claudiu Ciobotariu
+ * Copyright (C) 2016 Claudiu Ciobotariu
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,18 @@ package ro.ciubex.propeditor.activities;
 
 import ro.ciubex.propeditor.PropEditorApplication;
 import ro.ciubex.propeditor.R;
+import ro.ciubex.propeditor.tasks.DefaultAsyncTaskResult;
+import ro.ciubex.propeditor.tasks.DelayAsyncTask;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,12 +42,13 @@ import android.widget.TextView;
  * @author Claudiu Ciobotariu
  * 
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends AppCompatActivity implements DelayAsyncTask.Responder {
 	protected PropEditorApplication mApplication;
 	protected TextView mTitle;
 	protected ImageView icon;
 	protected int menuId;
 	private boolean showMenu;
+	protected AlertDialog mAlertDialog;
 
 	/**
 	 * The method invoked when the activity is creating
@@ -130,7 +135,7 @@ public class BaseActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * A default menu option consumer
+	 * A default menu option consumer.
 	 * 
 	 * @param menuItemId
 	 *            The menu item ID to be processed
@@ -146,15 +151,22 @@ public class BaseActivity extends ActionBarActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mApplication.hideProgressDialog();
+		prepareForClose();
 	}
 
 	/**
 	 * Method invoked on exit
 	 */
 	protected void onExit() {
+		new DelayAsyncTask(this, 500).execute();
+	}
+
+	/**
+	 * Prepare the activity to be closed.
+	 */
+	protected void prepareForClose() {
+		mApplication.destroyAlertDialog(mAlertDialog);
 		mApplication.onClose();
-		finish();
 	}
 
 	/**
@@ -189,7 +201,7 @@ public class BaseActivity extends ActionBarActivity {
 	 */
 	protected void showConfirmationDialog(int titleStringId, String message,
 			final int confirmationId, final Object anObject) {
-		new AlertDialog.Builder(this)
+		mAlertDialog = new AlertDialog.Builder(this)
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.setTitle(titleStringId)
 				.setMessage(message)
@@ -215,5 +227,16 @@ public class BaseActivity extends ActionBarActivity {
 	 */
 	protected void onConfirmation(int confirmationId, Object anObject) {
 
+	}
+
+	@Override
+	public void startDelayPeriod() {
+		mApplication.showProgressDialog(this, R.string.exiting);
+	}
+
+	@Override
+	public void endDelayPeriod(DefaultAsyncTaskResult result) {
+		prepareForClose();
+		finish();
 	}
 }

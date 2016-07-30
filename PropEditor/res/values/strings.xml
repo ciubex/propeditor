@@ -12,8 +12,9 @@
     <string name="properties_loaded">Were loaded %d properties.</string>
     <string name="no_properties">No properties</string>
     <string name="error_occurred">An error occurred:</string>
-    <string name="no_root_privilages">You do not have root privilages!</string>
+    <string name="no_root_privileges">You do not have root privileges!</string>
     <string name="unable_to_read">Unable to read %s file.</string>
+    <string name="exiting">Exiting&#8230;</string>
     
     <!-- Menu items -->
     <string name="menu_item_reload">Reload</string>
@@ -73,6 +74,9 @@
         <item>dark</item>
         <item>light</item>
     </string-array>
+    <string name="su_path_title">SU full path</string>
+    <string name="su_path_desc">Touch to set manually the SU path, the path string must be completed with the full folders tree including executable file name, attention is not the APK path/name must be the unix SU executable file.</string>
+    <string name="su_path_desc_param">Manually set the SU path to: %s</string>
     <string name="must_restart_application">To apply changes the application will try to restart itself, if the changes are not applied please restart manually the application!</string>
 
     <!-- Reboot -->
@@ -90,9 +94,9 @@
     <string name="file_restored">The file: %s successfully restored!</string>
     <string name="restore_file_failed">Restoring old file failed!</string>
 
-    <string name="loading_exception_report">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s\nDo you want to send a report using your email default application?</string>
-    <string name="loading_exception">Exception ocured during loading: %1$s\nException: %2$s\nMessage: %3$s</string>
-    <string name="saving_exception">Exception ocured during saving: %1$s\nException: %2$s\nMessage: %3$s</string>
+    <string name="loading_exception_report">Exception occurred during loading: %1$s\nException: %2$s\nMessage: %3$s\nDo you want to send a report using your email default application?</string>
+    <string name="loading_exception">Exception occurred during loading: %1$s\nException: %2$s\nMessage: %3$s</string>
+    <string name="saving_exception">Exception occurred during saving: %1$s\nException: %2$s\nMessage: %3$s</string>
     <string name="backup_failed">Backing up the old file was failed!</string>
     <string name="new_file_failed">Moving up the new file was failed!</string>
     <string name="file_not_exist">The file: %s don\'t exist!</string>

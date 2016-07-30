@@ -92,7 +92,7 @@ public class SavePropertiesTask extends
 			if (!continueSave) {
 				defaultResult.resultId = Constants.ERROR;
 				defaultResult.resultMessage = application
-						.getString(R.string.no_root_privilages);
+						.getString(R.string.no_root_privileges);
 			}
 		}
 		if (continueSave) {
@@ -175,6 +175,11 @@ public class SavePropertiesTask extends
 					/* ignored */
 				}
 			}
+		}
+		if (file.exists()) {
+			application.getUnixShell().runUnixCommand(
+					"chmod 644 " + file.getAbsoluteFile()
+			);
 		}
 	}
 

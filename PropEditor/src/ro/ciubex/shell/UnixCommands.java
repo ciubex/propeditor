@@ -35,8 +35,8 @@ public class UnixCommands {
 	private List<Partition> partitions;
 	private RootShell rootShell;
 
-	public UnixCommands() {
-		rootShell = new RootShell();
+	public UnixCommands(String suPath) {
+		rootShell = new RootShell(suPath);
 		populatePartitions();
 	}
 
@@ -198,5 +198,14 @@ public class UnixCommands {
 	 */
 	public boolean hasRootAccess() {
 		return rootShell.hasRootAccess();
+	}
+
+	/**
+	 * Get the SU path or empty string.
+	 *
+	 * @return The SU path or empty string.
+	 */
+	public String getSuPath() {
+		return rootShell.getSuPath();
 	}
 }

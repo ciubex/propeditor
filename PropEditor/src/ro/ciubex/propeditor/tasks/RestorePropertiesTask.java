@@ -122,7 +122,7 @@ public class RestorePropertiesTask extends
 		} else {
 			defaultResult.resultId = Constants.ERROR;
 			defaultResult.resultMessage = application
-					.getString(R.string.no_root_privilages);
+					.getString(R.string.no_root_privileges);
 		}
 	}
 

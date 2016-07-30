@@ -11,6 +11,11 @@
             android:key="appTheme"
             android:summary="@string/app_theme_desc"
             android:title="@string/app_theme_title"/>
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="suPath"
+            android:summary="@string/su_path_desc"
+            android:title="@string/su_path_title"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

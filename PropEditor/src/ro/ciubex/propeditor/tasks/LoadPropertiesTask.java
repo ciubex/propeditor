@@ -125,26 +125,22 @@ public class LoadPropertiesTask extends
 				try {
 					inputStream = new FileInputStream(f);
 					properties.load(inputStream);
-					defaultResult.resultMessage = responder.getApplication()
-							.getString(R.string.properties_loaded,
+					defaultResult.resultMessage = getStringMessage(R.string.properties_loaded,
 									properties.size());
 				} catch (IllegalArgumentException e) {
 					defaultResult.resultId = Constants.ERROR_REPORT;
-					defaultResult.resultMessage = responder.getApplication()
-							.getString(R.string.loading_exception_report, fileName,
-									"IllegalArgumentException: ", e.getMessage());
+					defaultResult.resultMessage = getStringMessage(R.string.loading_exception_report,
+							fileName, "IllegalArgumentException: ", e.getMessage());
 					application.logE(TAG, defaultResult.resultMessage, e);
 				} catch (FileNotFoundException e) {
-					defaultResult.resultId = Constants.ERROR;
-					defaultResult.resultMessage = responder.getApplication()
-							.getString(R.string.loading_exception, fileName,
-									"FileNotFoundException", e.getMessage());
+					defaultResult.resultId = Constants.ERROR_REPORT;
+					defaultResult.resultMessage = getStringMessage(R.string.loading_exception_report,
+							fileName, "FileNotFoundException", e.getMessage());
 					application.logE(TAG, defaultResult.resultMessage, e);
 				} catch (IOException e) {
-					defaultResult.resultId = Constants.ERROR;
-					defaultResult.resultMessage = responder.getApplication()
-							.getString(R.string.loading_exception, fileName,
-									"IOException", e.getMessage());
+					defaultResult.resultId = Constants.ERROR_REPORT;
+					defaultResult.resultMessage = getStringMessage(R.string.loading_exception_report,
+							fileName, "IOException", e.getMessage());
 					application.logE(TAG, defaultResult.resultMessage, e);
 				} finally {
 					if (inputStream != null) {
@@ -157,22 +153,31 @@ public class LoadPropertiesTask extends
 			} else {
 				if (application.getUnixShell().hasRootAccess()) {
 					defaultResult.resultId = Constants.ERROR;
-					defaultResult.resultMessage = responder.getApplication()
-							.getString(R.string.unable_to_read, fileName);
+					defaultResult.resultMessage = getStringMessage(R.string.unable_to_read, fileName);
 					application.logE(TAG, defaultResult.resultMessage);
 				} else {
 					defaultResult.resultId = Constants.ERROR;
-					defaultResult.resultMessage = responder.getApplication()
-							.getString(R.string.no_root_privilages);
+					defaultResult.resultMessage = getStringMessage(R.string.no_root_privileges);
 					application.logE(TAG, defaultResult.resultMessage);
 				}
 			}
 		} else {
 			defaultResult.resultId = Constants.ERROR;
-			defaultResult.resultMessage = responder.getApplication().getString(
+			defaultResult.resultMessage = getStringMessage(
 					R.string.file_not_exist, fileName);
 			application.logE(TAG, defaultResult.resultMessage);
 		}
+	}
+
+	/**
+	 * Prepare the message string based on the resource id and parameters.
+	 *
+	 * @param resId      The resource ID of the message template.
+	 * @param formatArgs The message parameters.
+	 * @return The formatted message.
+	 */
+	private String getStringMessage(int resId, Object... formatArgs) {
+		return responder.getApplication().getString(resId, formatArgs);
 	}
 
 	/**
@@ -193,7 +198,9 @@ public class LoadPropertiesTask extends
 		if (application.getUnixShell().runUnixCommand(
 				"cat " + fileName + " > " + destFile.getAbsolutePath())) {
 			application.getUnixShell().runUnixCommand(
-					"chmod 666 " + destFile.getAbsolutePath());
+					"chmod 644 " + destFile.getAbsolutePath());
+			application.getUnixShell().runUnixCommand(
+					"chcon u:object_r:app_data_file:s0:c512,c768 " + destFile.getAbsolutePath());
 		} else {
 			destFile = null;
 		}
