@@ -18,6 +18,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion "22.0.1"
 
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
